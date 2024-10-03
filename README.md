@@ -22,3 +22,10 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+RESSOURCES
+
+https://vuetifyjs.com/en/components/bottom-sheets/#usage
+https://vuejs.org/tutorial/#step-5
+https://cours.brosseau.ovh/tp/vuejs3/application.html

@@ -1,18 +1,58 @@
+
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to my end of year project: token.io!"/>
+  <img alt="Vue_logo" src="./assets/logo.png">
+  <div id="app">
+    <header>
+      <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/login">Login</router-link>
+      </nav>
+    </header>
+    <router-view/>
+    <footer>
+      <p>
+        &copy; 2024 Token.io by Lucas
+      </p>
+      <p>
+        End of year project for Holberton School's Fundamentals program.
+      </p>
+    </footer>
+
+  </div>
 </template>
 
+
+
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+// import WelcomePage from './components/WelcomePage.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  // components: {
+  //   WelcomePage,
+  // }
 }
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <style>
 #app {
