@@ -1,6 +1,6 @@
 
 <template>
-  <img alt="Vue_logo" src="./assets/logo.png">
+  <img id="vue_logo" alt="Vue_logo" src="./assets/logo.png">
   <div id="app">
     <header>
       <nav>
@@ -15,6 +15,7 @@
       </p>
       <!-- <p>
         End of year project for Holberton School's CS Fundamentals program.
+       ! ! ! ! ! ! ! ! ! ! GOTTA FIX THIS PARAGRAPH PROBLEM LATER!! ! ! ! ! ! ! ! !
       </p> -->
     </footer>
 
@@ -62,6 +63,12 @@ footer {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+#vue_logo {
+  width: 100px;
+  height: 100px;
+  margin-top: 20px;
 }
 
 #app {
