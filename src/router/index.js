@@ -3,6 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import WelcomePage from '../components/WelcomePage.vue';
 import LoginPage from '../components/LoginPage.vue';
 import RegisterPage from '../components/RegisterPage.vue';
+import AboutUsPage from '@/components/AboutUsPage.vue';
+import ContactUsPage from '@/components/ContactUsPage.vue';
+import OpenSourcePage from '@/components/OpenSourcePage.vue';
 
 const routes = [
   {
@@ -20,6 +23,22 @@ const routes = [
     name: 'Register',
     component: RegisterPage,
   },
+  {
+    path: '/aboutus',
+    name: 'AboutUs',
+    component: AboutUsPage,
+  },
+  {
+    path: '/contactus',
+    name: 'ContactUs',
+    component: ContactUsPage,
+  },
+  {
+    path: '/opensource',
+    name: 'OpenSource',
+    component:OpenSourcePage,
+  },
+
 ];
 
 const router = createRouter({

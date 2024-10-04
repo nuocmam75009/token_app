@@ -4,9 +4,13 @@
   <div id="app">
     <header>
       <nav>
-        <router-link to="/">Home</router-link> |
+        <router-link to="/">Home</router-link>
         <router-link to="/login">Login</router-link>
-        
+        <router-link to="/register">Register</router-link>
+        <router-link to="/contactus">Contact Us</router-link>
+        <router-link to="/aboutus">About Us</router-link>
+        <router-link to="/opensource">Open Source</router-link>
+
       </nav>
     </header>
     <router-view/>
@@ -16,7 +20,7 @@
       </p>
       <!-- <p>
         End of year project for Holberton School's CS Fundamentals program.
-       ! ! ! ! ! ! ! ! ! ! GOTTA FIX THIS PARAGRAPH PROBLEM LATER!! ! ! ! ! ! ! ! !
+       ! ! ! ! ! ! ! ! ! ! GOTTA FIX THIS PARAGRAPH PROBLEM LATER ! ! ! ! ! ! ! ! ! !
       </p> -->
     </footer>
 
@@ -53,6 +57,8 @@ header {
 header nav {
   margin-right: 20px;
   padding: 10px;
+  display: flex;
+  gap: 20px;
 }
 
 footer {

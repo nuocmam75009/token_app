@@ -11,13 +11,12 @@
             <label for="password">Password:</label>
                 <input id="password" type="password" v-model="input.password" required />
         </div>
-        <button class="btn-primary" type="submit">
+        <button class="btn-primary" type="submit" v-on:clock.prevent = "login()" >
             Login
         </button>
 
     </form>
 </template>
-
 
 
 <script>
@@ -33,6 +32,7 @@ export default {
     },
     methods: {
         login() {
+            // check if the username and password are not empty
             if(this.input.username !="" || this.input.password !="") {
                 console.log("authentication successful!");
             }else{
@@ -78,6 +78,7 @@ label {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
