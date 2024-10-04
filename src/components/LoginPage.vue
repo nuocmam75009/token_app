@@ -1,4 +1,3 @@
-/* eslint-disable */
 // Login Page
 <template>
     <form name="login-form">
@@ -14,29 +13,36 @@
         <button class="btn-primary" type="submit" v-on:clock.prevent = "login()" >
             Login
         </button>
-
     </form>
+    <h3>Output: {{ this.output }}  </h3>
 </template>
 
 
 <script>
+import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
 export default {
     name: 'LoginPage',
     data() {
         return {
             input: {
-                username: '',
-                password: ''
-            }
+                username: "",
+                password: ""
+            },
+            output: "",
         }
     },
     methods: {
         login() {
             // check if the username and password are not empty
             if(this.input.username !="" || this.input.password !="") {
-                console.log("authentication successful!");
+                this.output = "authentication successful!"
+                // stores true to the SET_AUTHENTICATION and username to the set_username
+                this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
+                this.$store.commit(`auth/${SET_USERNAME}`, this.input.username);
+                this.output = "authentication successful!"
             }else{
-                console.log("authentication failed! Username & Password required.");
+                this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
+                this.output = "Username and password cannot be empty!"
             }
         }
     }
