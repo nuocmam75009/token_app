@@ -8,6 +8,7 @@ import ContactUsPage from '@/components/ContactUsPage.vue';
 import OpenSourcePage from '@/components/OpenSourcePage.vue';
 import ResourcesPage from '@/components/ResourcesPage.vue';
 import HomePage from '@/components/HomePage.vue';
+import QuizzPage from '@/components/QuizzPage.vue';
 
 const routes = [
   {
@@ -49,6 +50,11 @@ const routes = [
     path: '/homepage',
     name: 'HomePage',
     component: HomePage,
+  },
+  {
+    path: '/start',
+    name: 'Start',
+    component: QuizzPage,
   }
 
 ];

@@ -1,11 +1,11 @@
 <template>
     <h1>About us</h1>
-    </template>
+</template>
 
-    <script>
+<script>
 
-    </script>
+</script>
 
-    <style>
+<style>
 
-    </style>
+</style>
