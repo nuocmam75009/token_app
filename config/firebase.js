@@ -22,10 +22,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getfirestore(app);
 
+export default db;
 
-// to bypass eslint unused var error
-db.collection("users").add({
-    first: "Ada",
-    last: "Lovelace",
-    born: 1815
-    })

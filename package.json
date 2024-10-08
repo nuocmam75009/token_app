@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "core-js": "^3.8.3",
     "firebase": "^10.14.0",
     "vue": "^3.2.13",
