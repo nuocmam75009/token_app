@@ -3,9 +3,9 @@
     <h1>Choose your difficulty level</h1>
 
     <div class="button-container">
-    <button class="diff-button" @click="startGame('easy')">Iron</button>
-    <button class="diff-button" @click="startGame('medium')">Gold</button>
-    <button class="diff-button" @click="startGame('hard')">Diamond</button>
+    <button class="diff-button" @click="startGame('easy')">Easy</button>
+    <button class="diff-button" @click="startGame('medium')">Intermediate</button>
+    <button class="diff-button" @click="startGame('hard')">Hard</button>
   </div>
 </div>
 

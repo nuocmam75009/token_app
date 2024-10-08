@@ -58,4 +58,16 @@ export default {
 
 <style>
 
+button {
+    width: 100%;
+    height: 50px;
+    background-color: lightblue;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: background-color 0.3s;
+}
+
 </style>
