@@ -7,6 +7,7 @@ import AboutUsPage from '@/components/AboutUsPage.vue';
 import ContactUsPage from '@/components/ContactUsPage.vue';
 import OpenSourcePage from '@/components/OpenSourcePage.vue';
 import ResourcesPage from '@/components/ResourcesPage.vue';
+import HomePage from '@/components/HomePage.vue';
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     path: '/resources',
     name: 'Resources',
     component: ResourcesPage,
+  },
+  {
+    path: '/homepage',
+    name: 'HomePage',
+    component: HomePage,
   }
 
 ];

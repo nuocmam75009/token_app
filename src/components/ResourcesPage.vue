@@ -32,6 +32,9 @@
     <div class="container">
         <p>Terminal</p>
     </div>
+    <div class="container">
+        <p>Networking</p>
+    </div>
 
 </div>
 
@@ -61,9 +64,6 @@
     </div>
     <div class="container">
         <p>CSS</p>
-    </div>
-    <div class="container">
-        <p>Your mom</p>
     </div>
 
 </div>
