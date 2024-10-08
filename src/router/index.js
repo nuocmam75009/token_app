@@ -6,6 +6,7 @@ import RegisterPage from '../components/RegisterPage.vue';
 import AboutUsPage from '@/components/AboutUsPage.vue';
 import ContactUsPage from '@/components/ContactUsPage.vue';
 import OpenSourcePage from '@/components/OpenSourcePage.vue';
+import ResourcesPage from '@/components/ResourcesPage.vue';
 
 const routes = [
   {
@@ -36,8 +37,13 @@ const routes = [
   {
     path: '/opensource',
     name: 'OpenSource',
-    component:OpenSourcePage,
+    component: OpenSourcePage,
   },
+  {
+    path: '/resources',
+    name: 'Resources',
+    component: ResourcesPage,
+  }
 
 ];
 
