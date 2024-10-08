@@ -33,12 +33,12 @@ export default {
                     this.timer--;
                 } else {
                     clearInterval(this.intervalId);
-                    this.goToResults(false); //no answer
+                    this.goToResults(false); // no answer
                 }
             }, 1000);
         },
         checkAnswer(answer) {
-            clearInterval(this.intervalId); //stop the timer on click
+            clearInterval(this.intervalId); // stop the timer on click
             if (answer === this.correctAnswer) {
                 this.goToResults(true); // correct
             } else {
