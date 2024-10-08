@@ -15,6 +15,7 @@
 
 export default {
     data() {
+        // Data object
         return {
             timer: 10,
             question: "What is a database?",
@@ -27,6 +28,7 @@ export default {
         this.startTimer();
     },
     methods: {
+        // Timer function
         startTimer() {
             this.intervalId = setInterval(() => {
                 if (this.timer > 0) {
@@ -37,6 +39,7 @@ export default {
                 }
             }, 1000);
         },
+        // Check answer function
         checkAnswer(answer) {
             clearInterval(this.intervalId); // stop the timer on click
             if (answer === this.correctAnswer) {

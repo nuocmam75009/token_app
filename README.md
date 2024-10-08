@@ -40,3 +40,4 @@ https://firebase.google.com/docs/firestore/manage-data/add-data?hl=fr&authuser=0
 
 https://openclassrooms.com/fr/courses/4872916-creez-un-backend-scalable-et-performant-sur-firebase/4872923-decouvrez-firebase
 
+https://cours.brosseau.ovh/tp/vuejs/firebase-vuejs.html
