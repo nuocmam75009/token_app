@@ -1,6 +1,6 @@
 <template>
 
-<h1>Resources here. Start learning!</h1>
+<h1>Resources</h1>
 
 <h3>Basic Commands</h3>
 <div class="commands">
@@ -15,6 +15,27 @@
     </div>
 </div>
 
+<h3>Basic Computer Science</h3>
+<div class="basic-cs">
+    <div class="container">
+        <p>Operating System</p>
+    </div>
+    <div class="container">
+        <p>Cloud Computing</p>
+    </div>
+    <div class="container">
+        <p>Data</p>
+    </div>
+    <div class="container">
+        <p>IDE</p>
+    </div>
+    <div class="container">
+        <p>Terminal</p>
+    </div>
+
+</div>
+
+
 <h3>Programming Languages</h3>
 <div class="languages">
     <div class="container">
@@ -26,33 +47,43 @@
     <div class="container">
         <p>JavaScript</p>
     </div>
-</div>
-
-<h3>Basic Computer Science Notions</h3>
-<div class="basic-cs">
     <div class="container">
-        <p>Linux</p>
+        <p>Java</p>
     </div>
     <div class="container">
-        <p>What's an Operating System?</p>
+        <p>SQL</p>
     </div>
+    <div class="container">
+        <p>Golang</p>
+    </div>
+    <div class="container">
+        <p>HTML</p>
+    </div>
+    <div class="container">
+        <p>CSS</p>
+    </div>
+    <div class="container">
+        <p>Your mom</p>
+    </div>
+
 </div>
 
-<h3>Advanced Computer Science Notions</h3>
+
+<h3>Advanced Computer Science</h3>
 <div class="advanced-cs">
     <div class="container">
         <p>Binary, Decimal & Hexadecimal</p>
     </div>
-</div>
+    <div class="container">
+        <p>Object-Oriented Programming</p>
+    </div>
+    <div class="container">
+        <p>Data Structure</p>
+    </div>
+    <div class="container">
+        <p>Algorithms</p>
+    </div>
 
-<h3>Data Structures & Algorithms</h3>
-<div class="data-structures">
-    <div class="container">
-        <p>Binary Search Tree</p>
-    </div>
-    <div class="container">
-        <p>Traverse a Node</p>
-    </div>
 </div>
 
 </template>
@@ -73,11 +104,13 @@
     text-align: center;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
 }
 
 .commands, .languages, .basic-cs, .advanced-cs, .data-structures {
     display: flex;
     justify-content: space-around; /* Distribute containers evenly */
     flex-wrap: wrap; /* Allow wrapping to a new row if containers overflow */
+
 }
 </style>
