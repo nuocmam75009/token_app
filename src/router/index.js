@@ -5,7 +5,6 @@ import LoginPage from '../components/LoginPage.vue';
 import RegisterPage from '../components/RegisterPage.vue';
 import AboutUsPage from '@/components/AboutUsPage.vue';
 import ContactUsPage from '@/components/ContactUsPage.vue';
-import OpenSourcePage from '@/components/OpenSourcePage.vue';
 import ResourcesPage from '@/components/ResourcesPage.vue';
 import HomePage from '@/components/HomePage.vue';
 import QuizzPage from '@/components/QuizzPage.vue';
@@ -35,11 +34,6 @@ const routes = [
     path: '/contactus',
     name: 'ContactUs',
     component: ContactUsPage,
-  },
-  {
-    path: '/opensource',
-    name: 'OpenSource',
-    component: OpenSourcePage,
   },
   {
     path: '/resources',

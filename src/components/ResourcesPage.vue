@@ -51,9 +51,6 @@
         <p>JavaScript</p>
     </div>
     <div class="container">
-        <p>Java</p>
-    </div>
-    <div class="container">
         <p>SQL</p>
     </div>
     <div class="container">
