@@ -1,61 +1,64 @@
+<!-- PAGE FOR THE GAME -->
+/* eslint-disable */
 <template>
-    <div>
-      <h1>{{ question }}</h1>
+    <div class="game">
+        <h2>You are now playing in {{ mode }} mode</h2>
+
       <div v-if="timer > 0">Time left: {{ timer }} seconds</div>
       <div v-else>Time's up!</div>
 
-      <button v-for="option in options" :key="option" @click="checkAnswer(option)">
-        {{ option }}
-      </button>
+      <div v-if="questions.length > 0 ">
+        <div v-for="(question, index) in questions" :key="index" class="question">
+            <p>{{ question.question }}</p>
+            <div class="options">
+                <button v-for="(option, idx) in question.options" :key="idx">
+                    {{ option }}
+                </button>
+            </div>
+        </div>
+      </div>
+      <div v-else>
+        <p>Loading questions...</p>
+      </div>
     </div>
   </template>
 
 
 <script>
 
+import { ref, onMounted } from 'vue';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+
+
 export default {
-    data() {
+    name: 'GamePage',
+    props: ['mode'],
+    setup(props) {
         // Data object
-        // To be replaced with Firebase's data
-        return {
-            timer: 10,
-            question: "What is a database?",
-            options: ["A collection of data", "A collection of tables", "A collection of rows", "A collection of columns"],
-            correctAnswer: "A collection of data",
-            intervalId: null,
+        const questions = ref([]);
+        // const db = getFirestore();
+
+        const fetchQuestions = async () => {
+            // Fetch questions from Firestore
+            const questionsSnapshot = await getDocs(collection(db, props.mode));
+            questions.value = questionsSnapshot.docs.map(doc => doc.data());
         };
-    },
-    created() {
-        this.startTimer();
-    },
-    methods: {
-        // Timer function
-        startTimer() {
-            this.intervalId = setInterval(() => {
-                if (this.timer > 0) {
-                    this.timer--;
-                } else {
-                    clearInterval(this.intervalId);
-                    this.goToResults(false); // no answer
-                }
-            }, 1000);
-        },
-        // Check answer function
-        checkAnswer(answer) {
-            clearInterval(this.intervalId); // stop the timer on click
-            if (answer === this.correctAnswer) {
-                this.goToResults(true); // correct
-            } else {
-                this.goToResults(false); // wrong answer
-            }
-        },
-        goToResults(isCorrect) {
-            this.$router.push({ name: "results", params: { isCorrect } });
-        },
+
+        onMounted(() => {
+            // Fetch questions when the component is mounted
+            fetchQuestions();
+            console.log('Selected mode:', props.mode); // Debugging
+        });
+
+        return {
+            questions,
+        };
     }
-}
+};
 
 </script>
+
 
 <style>
 
