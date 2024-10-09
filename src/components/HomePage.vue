@@ -3,9 +3,15 @@
     <h1>Choose your difficulty level</h1>
 
     <div class="button-container">
-    <button class="diff-button" @click="startGame('easy')">Easy</button>
-    <button class="diff-button" @click="startGame('medium')">Intermediate</button>
-    <button class="diff-button" @click="startGame('hard')">Hard</button>
+      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+        <button>Easy</button>
+      </router-link>
+      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+        <button>Intermediate</button>
+      </router-link>
+      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+        <button>Hard</button>
+      </router-link>
   </div>
 </div>
 
@@ -18,6 +24,7 @@ export default {
             this.$router.push({ name: 'game', params: { difficulty } });
         },
     },
+    name: 'HomePage',
 };
 
 </script>
