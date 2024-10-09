@@ -9,6 +9,7 @@ import ResourcesPage from '@/components/ResourcesPage.vue';
 import HomePage from '@/components/HomePage.vue';
 import QuizzPage from '@/components/QuizzPage.vue';
 import UserDashboardPage from '@/components/UserDashboardPage.vue';
+import GamePage from '@/components/GamePage.vue';
 
 const routes = [
   {
@@ -55,12 +56,18 @@ const routes = [
     path: '/userdashboard',
     name: 'UserDashboard',
     component: UserDashboardPage,
-  }
+  },
+  {
+    path: '/game/:mode',
+    name: 'Game',
+    component: GamePage,
+    props: true,
+  },
 
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
