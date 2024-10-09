@@ -16,6 +16,7 @@
 export default {
     data() {
         // Data object
+        // To be replaced with Firebase's data
         return {
             timer: 10,
             question: "What is a database?",
