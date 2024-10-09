@@ -41,8 +41,13 @@ export default {
 
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
-            const questionsSnapshot = await getDocs(collection(db, props.mode));
+            try {
+            const collectionName = `${props.mode}_questions`;
+            const questionsSnapshot = await getDocs(collection(db, collectionName));
             questions.value = questionsSnapshot.docs.map(doc => doc.data());
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+                    }
         };
 
         onMounted(() => {
