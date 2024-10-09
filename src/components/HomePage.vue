@@ -3,13 +3,13 @@
     <h1>Choose your difficulty level</h1>
 
     <div class="button-container">
-      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+      <router-link :to="{ name : 'Easymode', params: { mode: 'easy' } }">
         <button>Easy</button>
       </router-link>
-      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+      <router-link :to="{ name : 'IntermediateMode', params: { mode: 'intermediate' } }">
         <button>Intermediate</button>
       </router-link>
-      <router-link :to="{ name : 'Game', params: { mode: 'easy' } }">
+      <router-link :to="{ name : 'HardMode', params: { mode: 'hard' } }">
         <button>Hard</button>
       </router-link>
   </div>
