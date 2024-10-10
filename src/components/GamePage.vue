@@ -42,7 +42,10 @@ export default {
             // Fetch questions from Firestore
             try {
                 const collectionName = `${props.mode}_questions`;
+                console.log("Fetching questions from collection:", collectionName); // Debugging
+
                 const questionsSnapshot = await getDocs(collection(db, collectionName));
+
                 questions.value = questionsSnapshot.docs.map(doc => doc.data());
             } catch (error) {
                 console.error('Error fetching questions:', error);
