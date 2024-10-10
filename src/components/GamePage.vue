@@ -1,5 +1,4 @@
 <!-- PAGE FOR THE GAME -->
-/* eslint-disable */
 <template>
     <div class="game">
         <h2>You are now playing in {{ mode }} mode</h2>
@@ -37,8 +36,8 @@ export default {
     setup(props) {
         // Data object
         const questions = ref([]);
+        const timer = ref(10);
         // const db = getFirestore();
-
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
             try {
@@ -58,6 +57,7 @@ export default {
 
         return {
             questions,
+            timer,
         };
     }
 };
