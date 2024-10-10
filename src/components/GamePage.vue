@@ -3,24 +3,24 @@
     <div class="game">
         <h2>You are now playing in {{ mode }} mode</h2>
 
-      <div v-if="timer > 0">Time left: {{ timer }} seconds</div>
-      <div v-else>Time's up!</div>
+        <div v-if="timer > 0">Time left: {{ timer }} seconds</div>
+        <div v-else>Time's up!</div>
 
-      <div v-if="questions.length > 0 ">
-        <div v-for="(question, index) in questions" :key="index" class="question">
-            <p>{{ question.question }}</p>
-            <div class="options">
-                <button v-for="(option, idx) in question.options" :key="idx">
-                    {{ option }}
-                </button>
+        <div v-if="questions.length > 0">
+            <div v-for="(question, index) in questions" :key="index" class="question">
+                <p>{{ question.question }}</p>
+                <div class="options">
+                    <button v-for="(option, idx) in question.options" :key="idx">
+                        {{ option }}
+                    </button>
+                </div>
             </div>
         </div>
-      </div>
-      <div v-else>
-        <p>Loading questions...</p>
-      </div>
+        <div v-else>
+            <p>Loading questions...</p>
+        </div>
     </div>
-  </template>
+</template>
 
 
 <script>
@@ -34,20 +34,19 @@ export default {
     name: 'GamePage',
     props: ['mode'],
     setup(props) {
-        /*  */
         const questions = ref([]);
         const timer = ref(10);
         let intervalId;
+
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
             try {
-            const collectionName = `${props.mode}_questions`;
-            /* Bien vérifier titre des collections 'mode'_questions */
-            const questionsSnapshot = await getDocs(collection(db, collectionName));
-            questions.value = questionsSnapshot.docs.map(doc => doc.data());
-        } catch (error) {
-            console.error('Error fetching questions:', error);
-                    }
+                const collectionName = `${props.mode}_questions`;
+                const questionsSnapshot = await getDocs(collection(db, collectionName));
+                questions.value = questionsSnapshot.docs.map(doc => doc.data());
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            }
         };
 
         onMounted(() => {
