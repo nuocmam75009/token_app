@@ -37,6 +37,7 @@ export default {
         // Data object
         const questions = ref([]);
         const timer = ref(10);
+        let intervalId;
         // const db = getFirestore();
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
@@ -53,6 +54,14 @@ export default {
             // Fetch questions when the component is mounted
             fetchQuestions();
             console.log('Selected mode:', props.mode); // Debugging
+            intervalId = setInterval(() => {
+                // Decrement timer every second
+                if (timer.value > 0) {
+                    timer.value--;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 1000);
         });
 
         return {
