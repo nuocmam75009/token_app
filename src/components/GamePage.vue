@@ -34,15 +34,15 @@ export default {
     name: 'GamePage',
     props: ['mode'],
     setup(props) {
-        // Data object
+        /*  */
         const questions = ref([]);
         const timer = ref(10);
         let intervalId;
-        // const db = getFirestore();
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
             try {
             const collectionName = `${props.mode}_questions`;
+            /* Bien vérifier titre des collections 'mode'_questions */
             const questionsSnapshot = await getDocs(collection(db, collectionName));
             questions.value = questionsSnapshot.docs.map(doc => doc.data());
         } catch (error) {
