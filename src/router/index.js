@@ -61,19 +61,19 @@ const routes = [
     path: '/play/easy',
     name: 'Easymode',
     component: GamePage,
-    props: { difficulty: 'easy' }, // pass props
+    props: true,
   },
   {
     path: '/play/intermediate',
     name: 'IntermediateMode',
     component: GamePage,
-    props: { difficulty: 'intermediate' }, // pass props
+    props: true,
   },
   {
     path: '/play/hard',
     name: 'HardMode',
     component: GamePage,
-    props: { difficulty: 'hard' }, // pass props
+    props: true,
   },
 
 ];
