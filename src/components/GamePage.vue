@@ -26,6 +26,17 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
         <div v-else>
             <p>Loading questions...</p>
         </div>
+
+        <div v-if="isFinished">
+    <h3>Quiz Finished!</h3>
+    <p>Your Results:</p>
+    <ul>
+        <li v-for="(result, index) in results" :key="index">
+            {{ result.question }} - Your Answer: {{ result.selectedAnswer }} - {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
+        </li>
+    </ul>
+</div>
+
     </div>
 </template>
 
@@ -57,10 +68,10 @@ export default {
                 console.log("Fetching questions from collection:", collectionName); // Debugging
 
                 const questionsSnapshot = await getDocs(collection(db, collectionName));
-
                 questions.value = questionsSnapshot.docs.map(doc =>
                 doc.data());
                 correctAnswer: doc.data().correctAnswer; /* eslint-disable-line */
+                
             } catch (error) {
                 console.error('Error fetching questions:', error);
             }
