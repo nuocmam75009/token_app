@@ -47,6 +47,7 @@ export default {
         const currentQuestionIndex = ref(0);
         const isFinished = ref(false);
         const results = ref([]);
+        const answerSelected = ref(false); //track if answer is selected
         const selectedAnswer = ref(null); //track selected answer's idx
 
         const fetchQuestions = async () => {
@@ -80,6 +81,7 @@ export default {
                 isCorrect: isCorrect,
             });
 
+            answerSelected.value = true;
             selectedAnswer.value = optionIndex;
 
             moveToNextQuestion();
@@ -87,6 +89,8 @@ export default {
 
         const resetTimer = () => {
             timer.value = 15;
+            answerSelected.value = false;
+            selectedAnswer.value = null;
             // clear interval to avoid multiple timers running
             if (intervalId) clearInterval(intervalId);
 
