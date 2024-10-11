@@ -1,6 +1,5 @@
 <!--
 THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
-KANYE WEST IS THE GOAT
 -->
 <template>
     <div class="game">
@@ -13,7 +12,12 @@ KANYE WEST IS THE GOAT
             <div class="question">
                 <p>{{ currentQuestion.question }}</p>
                 <div class="options">
-                    <button v-for="(option, idx) in currentQuestion.options" :key="idx" @click="selectAnswer(idx)">
+                    <button v-for="(option, answerIndex) in currentQuestion.options"
+                    :key="answerIndex"
+                    @click="selectAnswer(answerIndex)"
+                    :disabled="timer === 0 || answerSelected"
+                    :class="{'selected': answerIndex === selectedAnswer, 'disabled': timer === 0}"
+                    >
                         {{ option }}
                     </button>
                 </div>
@@ -116,7 +120,7 @@ export default {
 button {
     width: 100%;
     height: 50px;
-    background-color: lightblue;
+    background-color: rgb(64, 121, 139);
     border: none;
     border-radius: 5px;
     font-size: 16px;
