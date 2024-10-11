@@ -60,30 +60,29 @@ export default {
         const selectAnswer = (option) => {
             console.log(`Selected answer: ${option}`);
             moveToNextQuestion();
-        }
+        };
 
-            const resetTimer = () => {
-                // Reset timer to 10 seconds
-                timer.value = 10;
-                if (intervalId) clearInterval(intervalId);
-            };
+        const resetTimer = () => {
+            // Reset timer to 10 seconds
+            timer.value = 10;
+            if (intervalId) clearInterval(intervalId);
+        };
 
-            const moveToNextQuestion = () => {
-                // Move to the next question if there are more questions
-                if (currentQuestionIndex.value < questions.value.length - 1) {
-                    currentQuestionIndex.value++;
-                    resetTimer();
-                } else {
-                    isFinished.value = true;
-                    clearInterval(intervalId);
-                }
-            };
-
+        const moveToNextQuestion = () => {
+            // Move to the next question if there are more questions
+            if (currentQuestionIndex.value < questions.value.length - 1) {
+                currentQuestionIndex.value++;
+                resetTimer();
+            } else {
+                isFinished.value = true;
+                clearInterval(intervalId);
+            }
+        };
 
         onMounted(() => {
-      fetchQuestions();
-      console.log('Selected mode:', props.mode); // Debugging
-      intervalId = setInterval(() => {
+            fetchQuestions();
+            console.log('Selected mode:', props.mode); // Debugging
+            intervalId = setInterval(() => {
                 // Decrement timer every second
                 if (timer.value > 0) {
                     timer.value--;
@@ -91,10 +90,12 @@ export default {
                     clearInterval(intervalId);
                 }
             }, 1000);
+        });
 
-    });
-
-        const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
+        const currentQuestion = computed(() =>
+            // Return the current question based on the current index
+            questions.value[currentQuestionIndex.value]
+        );
 
         return {
             questions,
