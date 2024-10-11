@@ -75,6 +75,12 @@ const routes = [
     component: GamePage,
     props: true,
   },
+  {
+    path: '/dashboard',
+    name: 'UserDashboard',
+    component: UserDashboardPage,
+    props: route => ({ results: route.params.user }),
+  }
 
 ];
 

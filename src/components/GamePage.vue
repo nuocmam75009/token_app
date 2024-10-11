@@ -16,7 +16,10 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
                     :key="answerIndex"
                     @click="selectAnswer(answerIndex)"
                     :disabled="timer === 0 || answerSelected"
-                    :class="{'selected': answerIndex === selectedAnswer, 'disabled': timer === 0}"
+                    :class="{
+                    'selected': answerIndex === selectedAnswer,
+                    'disabled': timer === 0
+                    }"
                     >
                         {{ option }}
                     </button>
@@ -35,6 +38,7 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
             {{ result.question }} - Your Answer: {{ result.selectedAnswer }} - {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
         </li>
     </ul>
+    <router-link :to="{ name: 'UserDashboard', params: { results: results } }">Check your progress!</router-link>
 </div>
 
     </div>
@@ -71,7 +75,7 @@ export default {
                 questions.value = questionsSnapshot.docs.map(doc =>
                 doc.data());
                 correctAnswer: doc.data().correctAnswer; /* eslint-disable-line */
-                
+
             } catch (error) {
                 console.error('Error fetching questions:', error);
             }
@@ -87,8 +91,8 @@ export default {
 
             // store results in array
             results.value.push({
-                question: currentQuestion.value.question,
-                selectedAnswer: currentQuestion.value.options[optionIndex],
+/*                 question: currentQuestion.value.question,
+                selectedAnswer: currentQuestion.value.options[optionIndex], */
                 isCorrect: isCorrect,
             });
 
