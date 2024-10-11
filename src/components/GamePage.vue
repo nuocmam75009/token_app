@@ -13,7 +13,7 @@ KANYE WEST IS THE GOAT
             <div class="question">
                 <p>{{ currentQuestion.question }}</p>
                 <div class="options">
-                    <button v-for="(option, idx) in currentQuestion.options" :key="idx" @click="selectOption(idx)">
+                    <button v-for="(option, idx) in currentQuestion.options" :key="idx" @click="selectAnswer(idx)">
                         {{ option }}
                     </button>
                 </div>
@@ -39,7 +39,7 @@ export default {
     setup(props) {
         const questions = ref([]);
         const timer = ref(10);
-        let intervalId;
+        let intervalId = null;
         const currentQuestionIndex = ref(0);
         const isFinished = ref(false);
 
@@ -60,19 +60,30 @@ export default {
 
         const selectAnswer = (option) => {
             console.log(`Selected answer: ${option}`);
-            if (currentQuestionIndex.value < questions.value.length - 1) {
-                currentQuestionIndex.value++;
-            } else {
-                isFinished.value = true;
-            }
-        };
+            moveToNextQuestion();
+        }
 
-        
+            const resetTimer = () => {
+                timer.value = 10;
+                if (intervalId) clearInterval(intervalId);
+            };
+
+            const moveToNextQuestion = () => {
+                // Move to the next question if there are more questions
+                if (currentQuestionIndex.value < questions.value.length - 1) {
+                    currentQuestionIndex.value++;
+                    resetTimer();
+                } else {
+                    isFinished.value = true;
+                    clearInterval(intervalId);
+                }
+            };
+
+
         onMounted(() => {
-            // Fetch questions when the component is mounted
-            fetchQuestions();
-            console.log('Selected mode:', props.mode); // Debugging
-            intervalId = setInterval(() => {
+      fetchQuestions();
+      console.log('Selected mode:', props.mode); // Debugging
+      intervalId = setInterval(() => {
                 // Decrement timer every second
                 if (timer.value > 0) {
                     timer.value--;
@@ -80,7 +91,7 @@ export default {
                     clearInterval(intervalId);
                 }
             }, 1000);
-        });
+    });
 
         const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
 
