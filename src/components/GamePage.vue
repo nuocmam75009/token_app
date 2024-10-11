@@ -52,7 +52,6 @@ export default {
                 const questionsSnapshot = await getDocs(collection(db, collectionName));
 
                 questions.value = questionsSnapshot.docs.map(doc => doc.data());
-                currentQuestion.value = questions.value[0]; // Set the first question as the current question
             } catch (error) {
                 console.error('Error fetching questions:', error);
             }
@@ -64,6 +63,7 @@ export default {
         }
 
             const resetTimer = () => {
+                // Reset timer to 10 seconds
                 timer.value = 10;
                 if (intervalId) clearInterval(intervalId);
             };
@@ -91,6 +91,7 @@ export default {
                     clearInterval(intervalId);
                 }
             }, 1000);
+
     });
 
         const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
