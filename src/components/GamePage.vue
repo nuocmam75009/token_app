@@ -33,7 +33,7 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
 <script>
 
 import { ref, onMounted, computed } from 'vue';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 
@@ -42,10 +42,12 @@ export default {
     props: ['mode'],
     setup(props) {
         const questions = ref([]);
-        const timer = ref(3);
+        const timer = ref(15);
         let intervalId = null;
         const currentQuestionIndex = ref(0);
         const isFinished = ref(false);
+        const results = ref([]);
+        const selectedAnswer = ref(null); //track selected answer's idx
 
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
@@ -55,19 +57,36 @@ export default {
 
                 const questionsSnapshot = await getDocs(collection(db, collectionName));
 
-                questions.value = questionsSnapshot.docs.map(doc => doc.data());
+                questions.value = questionsSnapshot.docs.map(doc =>
+                doc.data());
+                correctAnswer: doc.data().correctAnswer; /* eslint-disable-line */
             } catch (error) {
                 console.error('Error fetching questions:', error);
             }
         };
 
-        const selectAnswer = (option) => {
-            console.log(`Selected answer: ${option}`);
+        const selectAnswer = (optionIndex) => {
+            console.log(`Selected answer: ${optionIndex}`);
+
+            const correctIndex = currentQuestion.value.correctAnswer;
+
+            const isCorrect = optionIndex === correctIndex; // cmp selected option with correct option
+            console.log(`Selected answer's index: ${optionIndex}, Correct answer: ${correctIndex}, Is Correct: ${isCorrect}`); //debug
+
+            // store results in array
+            results.value.push({
+                question: currentQuestion.value.question,
+                selectedAnswer: currentQuestion.value.options[optionIndex],
+                isCorrect: isCorrect,
+            });
+
+            selectedAnswer.value = optionIndex;
+
             moveToNextQuestion();
         };
 
         const resetTimer = () => {
-            timer.value = 3;
+            timer.value = 15;
             // clear interval to avoid multiple timers running
             if (intervalId) clearInterval(intervalId);
 
@@ -120,6 +139,7 @@ export default {
             selectAnswer,
             currentQuestionIndex,
             isFinished,
+            results,
         };
     }
 };
