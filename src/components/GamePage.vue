@@ -42,7 +42,7 @@ export default {
     props: ['mode'],
     setup(props) {
         const questions = ref([]);
-        const timer = ref(10);
+        const timer = ref(3);
         let intervalId = null;
         const currentQuestionIndex = ref(0);
         const isFinished = ref(false);
@@ -67,7 +67,7 @@ export default {
         };
 
         const resetTimer = () => {
-            timer.value = 10;
+            timer.value = 3;
             // clear interval to avoid multiple timers running
             if (intervalId) clearInterval(intervalId);
 
@@ -76,7 +76,7 @@ export default {
                 if (timer.value > 0) {
                     timer.value--;
                 } else {
-                    moveToNextQuestion(); // add this line so it keeps moving forward as long as time's up 
+                    moveToNextQuestion(); // add this line so it keeps moving forward as long as time's up
                     clearInterval(intervalId);
                 }
             }, 1000);
