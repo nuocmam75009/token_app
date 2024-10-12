@@ -20,6 +20,10 @@
 
 <script>
 import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
+import { auth } from 'firebase/auth';
+
+
+
 export default {
     name: 'LoginPage',
     data() {
@@ -32,17 +36,25 @@ export default {
         }
     },
     methods: {
-        login() {
+        async login() {
             // check if the username and password are not empty
-            if(this.input.username !="" || this.input.password !="") {
-                this.output = "authentication successful!"
-                // stores true to the SET_AUTHENTICATION and username to the set_username
-                this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
-                this.$store.commit(`auth/${SET_USERNAME}`, this.input.username);
-                this.output = "authentication successful!"
-            }else{
+            if(this.input.username !="" && this.input.password !="") {
+                try {
+                    // sign in the user with the email and password
+                    await auth.signInWithEmailAndPassword(this.input.username, this.input.password);
+                    this.output = "authentication successful!";
+                    // set the authentication state to true
+                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
+                    this.$store.commit(`auth/${SET_USERNAME}`, this.input.username);
+                } catch (error) {
+                    // Log & display error if auth fails
+                    this.output = error.message;
+                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
+                }
+            } else {
+                // Display error if username and password are empty
+                this.output = "Username and password cannot be empty!";
                 this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
-                this.output = "Username and password cannot be empty!"
             }
         }
     }
