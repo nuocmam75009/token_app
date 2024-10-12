@@ -6,7 +6,7 @@ import RegisterPage from '../components/RegisterPage.vue';
 import AboutUsPage from '@/components/AboutUsPage.vue';
 import ContactUsPage from '@/components/ContactUsPage.vue';
 import ResourcesPage from '@/components/ResourcesPage.vue';
-import HomePage from '@/components/HomePage.vue';
+import HomePage from '../components/HomePage.vue';
 import QuizzPage from '@/components/QuizzPage.vue';
 import UserDashboardPage from '@/components/UserDashboardPage.vue';
 import GamePage from '@/components/GamePage.vue';
@@ -80,7 +80,7 @@ const routes = [
     name: 'UserDashboard',
     component: UserDashboardPage,
     props: route => ({ results: route.params.user }),
-  }
+  },
 
 ];
 

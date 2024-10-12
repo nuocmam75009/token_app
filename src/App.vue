@@ -4,15 +4,9 @@
   <div id="app">
     <header>
       <nav>
-        <!-- <router-link to="/">Home</router-link>
-        <router-link to="/login">Login</router-link> -->
-        <!-- <router-link to="/register">Register</router-link> -->
          <router-link to="/homepage">Start playing</router-link>
         <router-link to="/resources">Resources</router-link>
         <router-link to="/userdashboard">My Dashboard</router-link>
-        <!-- <router-link to="/contactus">Contact Us</router-link>
-        <router-link to="/aboutus">About Us</router-link>
-        <router-link to="/opensource">Open Source</router-link> -->
       </nav>
     </header>
     <router-view/>
@@ -26,6 +20,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'App',
 }

@@ -20,8 +20,7 @@
 
 <script>
 import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
-import { auth } from 'firebase/auth';
-
+import { auth } from "../../config/firebase";
 
 
 export default {

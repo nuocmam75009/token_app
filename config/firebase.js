@@ -13,10 +13,10 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
-export const auth = getAuth();
+const auth = getAuth();
 
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export { app, db };
+export { app, db, auth };
