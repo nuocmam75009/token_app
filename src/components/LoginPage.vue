@@ -1,14 +1,25 @@
 // Login Page
 <template>
-    <form name="login-form">
+    <form name="login-form" @submit.prevent="login">
         <div class="mb-3">
             <label for="username">Username:</label>
-                    <input id="username" type="text" v-model="input.username" required />
+                    <input
+                    id="username"
+                    type="text"
+                    v-model="input.username" required
+                    placeholder="Enter your username babygirl"
+                    />
                     <!-- // v-model to store the input value in the data object -->
         </div>
         <div class="mb-3">
             <label for="password">Password:</label>
-                <input id="password" type="password" v-model="input.password" required />
+                <input
+                id="password"
+                type="password"
+                v-model="input.password"
+                required
+                placeholder="Enter your password babygirl"
+                />
         </div>
         <button class="btn-primary" type="submit" v-on:clock.prevent = "login()" >
             Login
