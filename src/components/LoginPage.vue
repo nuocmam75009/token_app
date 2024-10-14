@@ -2,12 +2,12 @@
 <template>
     <form name="login-form" @submit.prevent="login">
         <div class="mb-3">
-            <label for="username">Username:</label>
+            <label for="username">Email adress:</label>
                     <input
                     id="username"
                     type="text"
-                    v-model="input.username" required
-                    placeholder="Enter your username babygirl"
+                    v-model="input.email" required
+                    placeholder="Enter your email adress babygirl"
                     />
                     <!-- // v-model to store the input value in the data object -->
         </div>
@@ -32,6 +32,9 @@
 <script>
 import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
 import { auth } from "../../config/firebase";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
+
 
 
 export default {
@@ -39,37 +42,48 @@ export default {
     data() {
         return {
             input: {
-                username: "",
+                email: "",
                 password: ""
             },
-            output: "",
+            error: "", // store error message
         }
     },
     methods: {
         async login() {
-            // check if the username and password are not empty
-            if(this.input.username !="" && this.input.password !="") {
+            // Using Vuex to manage login state.
+            // Commit the authentication state to true if the user is authenticated
+            // Redirecting to dashboard if the user is authenticated
+            // Handling error: no empty username and password
+
+            if (this.input.email && this.input.password) {
                 try {
-                    // sign in the user with the email and password
-                    await auth.signInWithEmailAndPassword(this.input.username, this.input.password);
-                    this.output = "authentication successful!";
-                    // set the authentication state to true
-                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
-                    this.$store.commit(`auth/${SET_USERNAME}`, this.input.username);
+                    const userCredential = await signInWithEmailAndPassword(
+                        auth,
+                        this.input.email,
+                        this.input.password
+                    );
+                    // Get authenticated user's info
+                    const user = userCredential.user;
+
+                    // Successful login
+                    this.$store.commot(`auth/${SET_AUTHENTICATION}`, true);
+                    this.$store.commit(`auth/${SET_USERNAME}`, user.email);
+
+                    // Routing to dashboard :) :) hihi
+                    this.$router.push('/userdashboard');
+
                 } catch (error) {
-                    // Log & display error if auth fails
+                    // Unsuccessful login
                     this.output = error.message;
                     this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
                 }
             } else {
-                // Display error if username and password are empty
-                this.output = "Username and password cannot be empty!";
-                this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
+                // Display error if empty
+                this.error = "Username and password cannot be empty babygirl!";
             }
         }
     }
-}
-
+};
 
 
 </script>
