@@ -3,6 +3,7 @@ import "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
@@ -13,10 +14,8 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
-const auth = getAuth();
-
-
 const app = initializeApp(firebaseConfig);
+const auth = getAuth();
 const db = getFirestore(app);
 
 export { app, db, auth };
