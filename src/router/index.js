@@ -53,11 +53,6 @@ const routes = [
     component: QuizzPage,
   },
   {
-    path: '/userdashboard',
-    name: 'UserDashboard',
-    component: UserDashboardPage,
-  },
-  {
     path: '/play/easy',
     name: 'Easymode',
     component: GamePage,
@@ -76,10 +71,12 @@ const routes = [
     props: true,
   },
   {
-    path: '/dashboard',
+    path: '/userdashboard',
     name: 'UserDashboard',
     component: UserDashboardPage,
-    props: route => ({ results: route.params.user }),
+    props: route => ({
+    results: route.query.results ? JSON.parse(route.query.results) : []
+  }),
   },
 
 ];

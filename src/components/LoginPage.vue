@@ -21,7 +21,7 @@
                 placeholder="Enter your password babygirl"
                 />
         </div>
-        <button class="btn-primary" type="submit" v-on:clock.prevent = "login()" >
+        <button class="btn-primary" type="submit">
             Login
         </button>
     </form>
@@ -65,17 +65,22 @@ export default {
                     // Get authenticated user's info
                     const user = userCredential.user;
 
-                    // Successful login
-                    this.$store.commot(`auth/${SET_AUTHENTICATION}`, true);
+                    // Commit to Vuex store
+                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
                     this.$store.commit(`auth/${SET_USERNAME}`, user.email);
 
                     // Routing to dashboard :) :) hihi
-                    this.$router.push('/userdashboard');
+                    this.$router.push({
+                        path: '/userdashboard',
+                        query: {
+                            results: JSON.stringify(this.results), // pass results as query params
+                        }
+
+                });
 
                 } catch (error) {
                     // Unsuccessful login
-                    this.output = error.message;
-                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
+                    this.error = "Invalid username or password babygirl!";
                 }
             } else {
                 // Display error if empty

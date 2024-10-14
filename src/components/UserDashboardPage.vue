@@ -32,6 +32,7 @@ export default {
         results: {
             type: Array,
             required: true,
+            default: () => [], // empty array if undefined
         }
     },
 };
