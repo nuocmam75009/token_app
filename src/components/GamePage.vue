@@ -32,12 +32,6 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
 
         <div v-if="isFinished">
     <h3>Quiz Finished!</h3>
-    <p>Your Results:</p>
-    <ul>
-        <li v-for="(result, index) in results" :key="index">
-            {{ result.question }} - Your Answer: {{ result.selectedAnswer }} - {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
-        </li>
-    </ul>
     <router-link :to="{ name: 'UserDashboard', params: { results: results } }">Check your progress!</router-link>
 </div>
 
@@ -163,7 +157,11 @@ export default {
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         // Reference to the user's document in Firestore
-                        const userResultsDocRef = doc(db, 'quizzResults', user.uid);
+                        const userResultsDocRef = doc(
+                            db,
+                            'quizzResults',
+                            user.uid
+                        );
 
                         const data = {
                             results: results.value,
