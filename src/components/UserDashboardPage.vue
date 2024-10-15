@@ -31,13 +31,36 @@ import { db, auth } from '../../config/firebase';
 
 export default {
     name: 'UserDashboard',
-    props: {
-        results: {
-            type: Array,
-            required: true,
-            default: () => [], // empty array if undefined
-        }
+    data() {
+        return {
+            results: [],
+        };
     },
+    async mounted() {
+        try  {
+            const user = auth.currentUser;
+            if (user) {
+                // Get user results from Firestore
+                const userResultsDocRef = doc(
+                    db,
+                    'quizzResults',
+                    user.uid
+                );
+                const docSnap = await getDoc(userResultsDocRef);
+
+                if (docSnap.exists()) {
+                    // If document exists, access stored results
+                    this.results = docSnap.data().results; // access stored results
+                } else {
+                    console.log('No results found');
+                }
+            }
+        } catch (error) {
+            // Handle error
+            console.error('Error fetching user results:', error);
+        }
+    }
+
 };
 
 
