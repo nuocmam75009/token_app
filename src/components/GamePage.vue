@@ -159,6 +159,8 @@ export default {
             currentQuestionIndex,
             isFinished,
             results,
+            answerSelected,
+            selectedAnswer,
         };
     }
 };

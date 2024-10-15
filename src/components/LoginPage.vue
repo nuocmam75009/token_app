@@ -25,16 +25,22 @@
             Login
         </button>
     </form>
+
+    <div class="google-login">
+        <h2>
+            <button @click="LoginWithGoogle">
+                SignIn with your Google account
+            </button>
+        </h2>
+    </div>
     <!-- <h3>Output: {{ this.output }}  </h3> -->
 </template>
 
 
 <script>
 import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
-import { auth } from "../../config/firebase";
-import { signInWithEmailAndPassword } from 'firebase/auth';
-
-
+import { auth, googleProvider } from "../../config/firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
 
 export default {
@@ -87,7 +93,22 @@ export default {
                 this.error = "Username and password cannot be empty babygirl!";
             }
         }
-    }
+    },
+    async LoginWithGoogle() {
+        // Login with Google
+        try {
+
+            // Creates Google Access Token for Google's API
+            // user stores the user's info
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            console.log("User info:", user);
+            // As normal login, redirects to user dashboard
+            this.$router.push('/userdashboard');
+        } catch (error) {
+            console.error("Error signing in with Google:", error);
+        }
+    },
 };
 
 
