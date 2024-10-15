@@ -130,6 +130,9 @@ export default {
             else {
                 isFinished.value = true;
                 clearInterval(intervalId);
+
+                //Store results in Firestore
+                storeResultsInFirestore();
             }
         };
 
