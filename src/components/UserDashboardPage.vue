@@ -26,6 +26,9 @@
 
 <script>
 
+import { doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../../config/firebase';
+
 export default {
     name: 'UserDashboard',
     props: {
