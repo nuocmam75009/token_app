@@ -2,7 +2,7 @@
     <h1>Track your progress here.</h1>
 
     <div class="user-dashboard">
-    <p>Here are your results:</p>
+    <!-- <p>Here are your results:</p> -->
 
     <div v-if="results.length > 0">
         <ul>

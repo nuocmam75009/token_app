@@ -81,8 +81,7 @@ export default {
                         query: {
                             results: JSON.stringify(this.results), // pass results as query params
                         }
-
-                });
+                    });
 
                 } catch (error) {
                     // Unsuccessful login
@@ -92,22 +91,21 @@ export default {
                 // Display error if empty
                 this.error = "Username and password cannot be empty babygirl!";
             }
-        }
-    },
-    async LoginWithGoogle() {
-        // Login with Google
-        try {
-
-            // Creates Google Access Token for Google's API
-            // user stores the user's info
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-            console.log("User info:", user);
-            // As normal login, redirects to user dashboard
-            this.$router.push('/userdashboard');
-        } catch (error) {
-            console.error("Error signing in with Google:", error);
-        }
+        },
+        async LoginWithGoogle() {
+            // Login with Google
+            try {
+                // Creates Google Access Token for Google's API
+                // user stores the user's info
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+                console.log("User info:", user);
+                // As normal login, redirects to user dashboard
+                this.$router.push('/userdashboard');
+            } catch (error) {
+                console.error("Error signing in with Google:", error);
+            }
+        },
     },
 };
 
