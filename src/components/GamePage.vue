@@ -48,8 +48,9 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
 <script>
 
 import { ref, onMounted, computed } from 'vue';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { auth } from 'firebase/auth';
 
 
 export default {
@@ -151,6 +152,42 @@ export default {
             questions.value[currentQuestionIndex.value]
         );
 
+        const storeResultsInFirestore = async () => {
+            // Store the user's results in Firestore
+            try {
+                // ensure user's logged in
+                const user = auth.currentUser;
+                if (!user) {
+                    console.error('User not authenticated');
+                    return;
+                }
+                // reference to the user's results document
+                const userResultsDocRef = doc(
+                    db,
+                    "quizzResults",
+                    user.uid
+                );
+                // data to be stored
+                const data = {
+                    results: results.value,
+                    timestamp: new Date(),
+                };
+
+                // store results in Firestore
+                // merge = no overwrite
+                await setDoc(userResultsDocRef, data, { merge: true });
+                console.log('Results stored in Firestore:', data);
+            } catch (error) {
+            console.error('Error storing results in Firestore:', error);
+        }
+    };
+
+
+
+
+
+
+
         return {
             questions,
             currentQuestion,
@@ -161,6 +198,7 @@ export default {
             results,
             answerSelected,
             selectedAnswer,
+            storeResultsInFirestore,
         };
     }
 };
