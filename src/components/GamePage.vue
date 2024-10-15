@@ -93,8 +93,8 @@ export default {
 
             // store results in array
             results.value.push({
-/*                 question: currentQuestion.value.question,
-                selectedAnswer: currentQuestion.value.options[optionIndex], */
+                question: currentQuestion.value.question,
+                selectedAnswer: currentQuestion.value.options[optionIndex],
                 isCorrect: isCorrect,
             });
 
