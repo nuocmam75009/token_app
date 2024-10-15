@@ -50,7 +50,7 @@ THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
 import { ref, onMounted, computed } from 'vue';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { auth } from 'firebase/auth';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
 
 
 export default {
@@ -59,6 +59,7 @@ export default {
     setup(props) {
         const questions = ref([]);
         const timer = ref(15);
+        const auth = getAuth();
         let intervalId = null;
         const currentQuestionIndex = ref(0);
         const isFinished = ref(false);
@@ -158,38 +159,30 @@ export default {
         const storeResultsInFirestore = async () => {
             // Store the user's results in Firestore
             try {
-                // ensure user's logged in
-                const user = auth.currentUser;
-                if (!user) {
-                    console.error('User not authenticated');
-                    return;
-                }
-                // reference to the user's results document
-                const userResultsDocRef = doc(
-                    db,
-                    "quizzResults",
-                    user.uid
-                );
-                // data to be stored
-                const data = {
-                    results: results.value,
-                    timestamp: new Date(),
-                };
+                // Check for authenticated user
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        // Reference to the user's document in Firestore
+                        const userResultsDocRef = doc(db, 'quizzResults', user.uid);
 
-                // store results in Firestore
-                // merge = no overwrite
-                await setDoc(userResultsDocRef, data, { merge: true });
-                console.log('Results stored in Firestore:', data);
+                        const data = {
+                            results: results.value,
+                            timestamp: new Date(),
+                        };
+
+                        // Store results in Firestore
+                        await setDoc(userResultsDocRef, data, { merge: true });
+                        console.log('Results stored in Firestore:', data);
+                    } else {
+                        // User not logged in
+                        console.error('User not logged in');
+                    }
+                });
             } catch (error) {
-            console.error('Error storing results in Firestore:', error);
-        }
-    };
-
-
-
-
-
-
+                // Handle error
+                console.error('Error storing results in Firestore:', error);
+            }
+        };
 
         return {
             questions,
