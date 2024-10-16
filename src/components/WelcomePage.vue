@@ -8,6 +8,19 @@
             Start learning now!
             </button>
         </router-link>
+
+        <v-container>
+            <v-row>
+                <v-col cols="4" v-for="(v, index) in data" v-bind:key="index">
+                    <v-sheet class="text-center">
+                        {{ v }}
+                        Hello
+                    </v-sheet>
+                </v-col>
+            </v-row>
+        </v-container>
+
+
 </template>
 
 <script>
