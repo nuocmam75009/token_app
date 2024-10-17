@@ -1,26 +1,46 @@
 
 <template>
   <!--  <img id="vue_logo" alt="Vue_logo" src="./assets/logo.png">  -->
-  <div id="app">
-    <header>
-      <nav>
-         <router-link to="/homepage">Start playing</router-link>
-        <router-link to="/resources">Resources</router-link>
-        <router-link to="/userdashboard">My Dashboard</router-link>
-      </nav>
-    </header>
-    <router-view/>
-    <footer>
-      <p>
-        &copy; 2024 token.io
-      </p>
-    </footer>
+    <v-app>
+  <v-app-bar :elevation="6" app color="blue darken-1" dark fixed>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-  </div>
+  <v-toolbar-title>Token.io</v-toolbar-title>
+
+
+    <v-spacer></v-spacer>
+
+
+    <div class="nav-links">
+
+      <!-- Router links styled with vuetify -->
+
+
+      <router-link to="/homepage">
+        <v-btn text class="nav-links">Home</v-btn>
+      </router-link>
+      <router-link to="/resources">
+        <v-btn text class=white--text>Resources</v-btn>
+      </router-link>
+      <router-link to="/userdashboard">
+        <v-btn text class=white--text>My Dashboard</v-btn>
+      </router-link>
+    </div>
+  </v-app-bar>
+
+  <v-main>
+      <router-view/>
+  </v-main>
+
+    <v-footer app color="blue darken-1" dark fixed>
+      <span class="white--text">&copy; 2024 Token.io</span>
+    </v-footer>
+
+  </v-app>
+
 </template>
 
 <script>
-
 
 export default {
   name: 'App',
@@ -28,51 +48,47 @@ export default {
 </script>
 
 <style>
+
+.v-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.v-main {
+  flex-grow: 1;
+}
+
+.content {
+  padding-top: 2px;
+  padding-bottom: 64px;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
 }
 
-header {
-  background-color: #72a1cf;
-  color: white;
-  padding: 10px;
-  position: fixed;
-  top: 0;
-  width: 100%;
+.v-btn {
+  font-weight: bold;
+  margin-left: 30px;
+}
+
+.nav-links {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
 }
 
-header nav {
-  margin-right: 20px;
-  padding: 10px;
-  display: flex;
-  gap: 20px;
+.router-link {
+  margin-right: 10px;
 }
 
-footer {
-  background-color: #72a1cf;
-  color: white;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-#vue_logo {
-  width: 100px;
-  height: 100px;
-  margin-top: 20px;
-}
-
-#app {
-  margin-top: 80px; /* Adjust this value if needed to avoid content being hidden behind the header */
+.v-footer {
+  margin-bottom: 2px;
 }
 </style>

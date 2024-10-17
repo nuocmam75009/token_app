@@ -11,6 +11,7 @@
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "core-js": "^3.8.3",
     "firebase": "^10.14.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.13",
     "vuetify": "^3.7.2",
@@ -45,5 +46,6 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
 }

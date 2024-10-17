@@ -1,0 +1,18 @@
+// src/plugins/vuetify.js
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles'; // Import Vuetify CSS styles
+import { aliases, mdi } from 'vuetify/iconsets/mdi'; // Optional icon set
+
+// Create a Vuetify instance
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'light', // You can change the default theme here
+  },
+  icons: {
+    defaultSet: 'mdi', // Set default icon set
+    aliases,
+    sets: { mdi }, // Register MDI icon set
+  },
+});
+
+export default vuetify;
