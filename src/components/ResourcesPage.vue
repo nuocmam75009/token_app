@@ -4,8 +4,17 @@
 
 <h3>Basic Commands</h3>
 <div class="commands">
+    
     <div class="container">
-        <p>Git</p>
+        <v-tooltip location="top" activator="parent">
+        <template #vTooltip>
+            <v-btn v-bind="props"></v-btn>
+        </template>
+        <span>Git is a distributed version control system widely used in software development. <br>
+            It allows multiple people to work on a project simultaneously, <br>
+            tracking changes and managing different versions of code.</span>
+    </v-tooltip>
+      <p>Git</p>
     </div>
     <div class="container">
         <p>Bash</p>
@@ -87,6 +96,13 @@
 
 <script>
 
+import { VTooltip } from 'vuetify/components'
+
+export default {
+    components: {
+        VTooltip
+    }
+}
 
 </script>
 
@@ -110,4 +126,11 @@
     flex-wrap: wrap; /* Allow wrapping to a new row if containers overflow */
 
 }
+
+.v-tooltip {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+
 </style>

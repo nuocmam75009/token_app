@@ -5,26 +5,24 @@
   <v-app-bar :elevation="6" app color="blue darken-1" dark fixed>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-  <v-toolbar-title>Token.io</v-toolbar-title>
-
-
+  <!-- <v-toolbar-title>Token.io</v-toolbar-title> -->
     <v-spacer></v-spacer>
 
 
     <div class="nav-links">
 
-      <!-- Router links styled with vuetify -->
+      <router-link to="/homepage" class="v-btn" exact>
+        Homepage
+      </router-link>
 
+      <router-link to="/resources" class="v-btn" exact>
+        Resources
+      </router-link>
 
-      <router-link to="/homepage">
-        <v-btn text class="nav-links">Home</v-btn>
+      <router-link to="/userdashboard" class="v-btn" exact>
+        My Dashboard
       </router-link>
-      <router-link to="/resources">
-        <v-btn text class=white--text>Resources</v-btn>
-      </router-link>
-      <router-link to="/userdashboard">
-        <v-btn text class=white--text>My Dashboard</v-btn>
-      </router-link>
+
     </div>
   </v-app-bar>
 
@@ -41,6 +39,7 @@
 </template>
 
 <script>
+
 
 export default {
   name: 'App',
