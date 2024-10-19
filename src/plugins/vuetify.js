@@ -3,8 +3,8 @@ import { createVuetify } from 'vuetify';
 import 'vuetify/styles'; // Import Vuetify CSS styles
 import { aliases, mdi } from 'vuetify/iconsets/mdi'; // Optional icon set
 
-// Create a Vuetify instance
-const vuetify = createVuetify({
+
+export const vuetify = createVuetify({
   theme: {
     defaultTheme: 'light', // You can change the default theme here
   },
@@ -15,4 +15,4 @@ const vuetify = createVuetify({
   },
 });
 
-export default vuetify;
+// export default vuetify;
