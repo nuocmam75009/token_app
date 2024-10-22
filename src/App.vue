@@ -15,7 +15,7 @@
         Homepage
       </router-link>
 
-      <router-link to="/resources" class="v-btn" exact>
+      <router-link to="/test" class="v-btn" exact>
         Resources
       </router-link>
 

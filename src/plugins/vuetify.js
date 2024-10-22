@@ -1,6 +1,7 @@
 // src/plugins/vuetify.js
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles'; // Import Vuetify CSS styles
+import '@mdi/font/css/materialdesignicons.css';
 import { aliases, mdi } from 'vuetify/iconsets/mdi'; // Optional icon set
 
 
@@ -14,5 +15,3 @@ export const vuetify = createVuetify({
     sets: { mdi }, // Register MDI icon set
   },
 });
-
-// export default vuetify;

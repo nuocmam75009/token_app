@@ -10,6 +10,7 @@ import HomePage from '../components/HomePage.vue';
 import QuizzPage from '@/components/QuizzPage.vue';
 import UserDashboardPage from '@/components/UserDashboardPage.vue';
 import GamePage from '@/components/GamePage.vue';
+import TestResources from '@/components/TestResources.vue';
 
 const routes = [
   {
@@ -77,6 +78,11 @@ const routes = [
     props: route => ({
     results: route.query.results ? JSON.parse(route.query.results) : []
   }),
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: TestResources,
   },
 
 ];

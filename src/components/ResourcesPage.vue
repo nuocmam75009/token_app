@@ -4,10 +4,10 @@
 
 <h3>Basic Commands</h3>
 <div class="commands">
-    
+
     <div class="container">
         <v-tooltip location="top" activator="parent">
-        <template #vTooltip>
+        <template #VTooltip>
             <v-btn v-bind="props"></v-btn>
         </template>
         <span>Git is a distributed version control system widely used in software development. <br>
@@ -16,6 +16,7 @@
     </v-tooltip>
       <p>Git</p>
     </div>
+    
     <div class="container">
         <p>Bash</p>
     </div>
@@ -101,8 +102,8 @@ import { VTooltip } from 'vuetify/components'
 export default {
     components: {
         VTooltip
-    }
-}
+    },
+};
 
 </script>
 
