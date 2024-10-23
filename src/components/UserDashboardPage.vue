@@ -1,28 +1,61 @@
 <template>
-    <h1>Track your progress here.</h1>
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+            <v-hover
+            v-slot="{ isHovering, props }"
+            open-delay="100"
+            >
+          <v-card
+          :class="{ 'onHover': isHovering }"
+          :elevation="isHovering ? 16 : 2"
+          height="350"
+          v-bind="props"
+          >
+            <v-card-title>
+              <h3>User Dashboard</h3>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col cols="12">
+                  <p><strong>First Name:</strong> {{  }}</p>
+                  <p><strong>Last Name:</strong> {{  }}</p>
+                  <p><strong>Email:</strong> {{  }}</p>
+                </v-col>
+              </v-row>
+              <v-btn color="blue" @click="editInfo">Edit Information</v-btn>
+            </v-card-text>
+          </v-card>
+            </v-hover>
+        </v-col>
 
-    <div class="user-dashboard">
-    <!-- <p>Here are your results:</p> -->
+        <!-- Section to review the last quiz -->
+        <v-col cols="12">
+            <v-hover
+            v-slot="{ isHovering, props }"
+            open-delay="100"
+            >
+          <v-card
+          :class="{ 'onHover': isHovering }"
+          :elevation="isHovering ? 16 : 2"
+          height="350"
+          v-bind="props"
+          >
+            <v-card-title>
+              <h3>Last Quiz</h3>
+            </v-card-title>
 
-    <div v-if="results.length > 0">
-        <ul>
-            <li v-for="(result, index) in results" :key="index">
-                <strong>Question:</strong> {{ result.question }} <br>
-                <strong>Your Answer:</strong> {{ result.selectedAnswer }} <br>
-                <strong>Result:</strong> <span :class="{'correct': result.isCorrect, 'incorrect': !result.isCorrect}">
-                    {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
-                </span>
-            </li>
-        </ul>
-
-    </div>
-    <div v-else>
-        <p>Nothing to display here!</p>
-    </div>
-
-</div>
-
-</template>
+            <v-card-text>
+              <p><strong>Quiz Title:</strong> {{  }}</p>
+              <p><strong>Score:</strong> {{  }}%</p>
+              <v-btn color="blue" @click="editInfo">Show details</v-btn>
+            </v-card-text>
+          </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+    </v-container>
+  </template>
 
 <script>
 
@@ -35,6 +68,10 @@ export default {
     data() {
         return {
             results: [],
+            firstName: '',
+            lastName: '',
+            emailAdress: '',
+            loading: true,
         };
     },
     async mounted() {
@@ -59,6 +96,35 @@ export default {
         } catch (error) {
             // Handle error
             console.error('Error fetching user results:', error);
+        }
+    },
+
+    async created() {
+        try {
+
+            const userId = "USER_ID";
+            const userRef = doc(db, 'users', userId);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+        this.firstName = userData.firstName;
+        this.lastName = userData.lastName;
+        this.email = userData.email;
+        this.results = userData.results || [];
+            } else {
+                console.log('No user');
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        } finally {
+            this.loading = false;
+        }
+    },
+
+    methods: {
+        editInfo() {
+            this.$router.push('/edit-info');
         }
     }
 
