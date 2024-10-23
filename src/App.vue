@@ -1,49 +1,49 @@
-
 <template>
-  <!--  <img id="vue_logo" alt="Vue_logo" src="./assets/logo.png">  -->
-    <v-app>
-  <v-app-bar :elevation="6" app color="blue darken-1" dark fixed>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-  <!-- <v-toolbar-title>Token.io</v-toolbar-title> -->
-    <v-spacer></v-spacer>
+<v-app>
+      <v-navigation-drawer
+      app
+      expand-on-hover
+      rail
+      open-delay="200"
+      >
 
+      <v-list>
+        <v-list-item>
+          Token.io
+          </v-list-item>
+      </v-list>
 
-    <div class="nav-links">
+      <v-list density="compact" nav>
+        <v-list-item prepend-icon="mdi-home" to="/homepage">
+          Homepage
+        </v-list-item>
+        <v-list-item prepend-icon="mdi-account" to="/userdashboard">
+          My Dashboard
+        </v-list-item>
+        <v-list-item prepend-icon="mdi-book" to="/test">
+          Resources
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-      <router-link to="/homepage" class="v-btn" exact>
-        Homepage
-      </router-link>
-
-      <router-link to="/test" class="v-btn" exact>
-        Resources
-      </router-link>
-
-      <router-link to="/userdashboard" class="v-btn" exact>
-        My Dashboard
-      </router-link>
-
-    </div>
-  </v-app-bar>
-
-  <v-main>
+    <v-main>
       <router-view/>
-  </v-main>
+    </v-main>
 
     <v-footer app color="blue darken-1" dark fixed>
       <span class="white--text">&copy; 2024 Token.io</span>
     </v-footer>
-
-  </v-app>
+</v-app>
 
 </template>
 
 <script>
 
-
 export default {
   name: 'App',
-}
+};
+
 </script>
 
 <style>
