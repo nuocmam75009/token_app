@@ -1,137 +1,170 @@
 <template>
 
-<h1>Resources</h1>
+    <v-container>
+        <v-row>
+            <v-col cols="12">
+                <v-slide-group
+                    v-model="selectedCard"
+                    show-arrows
+                    id="lesson-cards"
+                    class="d-flex flex-row justify-"
+                    center-active
+                    @change="updateFocusCard"
+                >
+                <v-slide-item
+                    v-for="(lesson, index) in lessons"
+                    :key="lesson.id"
+                    >
 
-<h3>Basic Commands</h3>
-<div class="commands">
+                    <!-- Card layout -->
 
-    <div class="container">
-        <v-tooltip location="top" activator="parent">
-        <template #VTooltip>
-            <v-btn v-bind="props"></v-btn>
-        </template>
-        <span>Git is a distributed version control system widely used in software development. <br>
-            It allows multiple people to work on a project simultaneously, <br>
-            tracking changes and managing different versions of code.</span>
-    </v-tooltip>
-      <p>Git</p>
-    </div>
-    
-    <div class="container">
-        <p>Bash</p>
-    </div>
-    <div class="container">
-        <p>Shell</p>
-    </div>
-</div>
+                        <v-card :elevation="index === selectedCard ? 12 : 2" id="lesson-card" class="mx-4" max-width="344">
 
-<h3>Basic Computer Science</h3>
-<div class="basic-cs">
-    <div class="container">
-        <p>Operating System</p>
-    </div>
-    <div class="container">
-        <p>Cloud Computing</p>
-    </div>
-    <div class="container">
-        <p>Data</p>
-    </div>
-    <div class="container">
-        <p>IDE</p>
-    </div>
-    <div class="container">
-        <p>Terminal</p>
-    </div>
-    <div class="container">
-        <p>Networking</p>
-    </div>
-
-</div>
+                            <v-card-text>
+                                <div>
+                                    Lesson
+                                </div>
+                                <p class="test-h4 font-weight-black">
+                                    {{ lesson.title }}
+                                </p>
+                                <p>
+                                    Skillset: {{ lesson.skillset }}
+                                </p>
+                                <div class="text-medium-emphasis">
+                                    {{ lesson.content }}
+                                </div>
+                            </v-card-text>
 
 
-<h3>Programming Languages</h3>
-<div class="languages">
-    <div class="container">
-        <p>C</p>
-    </div>
-    <div class="container">
-        <p>Python</p>
-    </div>
-    <div class="container">
-        <p>JavaScript</p>
-    </div>
-    <div class="container">
-        <p>SQL</p>
-    </div>
-    <div class="container">
-        <p>Golang</p>
-    </div>
-    <div class="container">
-        <p>HTML</p>
-    </div>
-    <div class="container">
-        <p>CSS</p>
-    </div>
 
-</div>
+                            <v-card-actions>
+                                <v-btn
+                                @click="toggleReveal(lesson.extra_content)"
+                                color="teal-accent-4"
+                                text="Learn More"
+                                variant="text"
+                                >
+                                    {{ lesson.content_1 }}
+                                </v-btn>
+                            </v-card-actions>
 
+                            <v-expand-transition>
+                <v-card
+                  v-if="isRevealed(lesson.id)"
+                  class="position-absolute w-100"
+                  height="100%"
+                  style="bottom: 0"
+                >
+                  <v-card-text class="pb-0">
+                    <p class="text-h4">Additional Details</p>
+                    <p class="text-medium-emphasis">
+                      {{ lesson.details }}
+                    </p>
+                  </v-card-text>
 
-<h3>Advanced Computer Science</h3>
-<div class="advanced-cs">
-    <div class="container">
-        <p>Binary, Decimal & Hexadecimal</p>
-    </div>
-    <div class="container">
-        <p>Object-Oriented Programming</p>
-    </div>
-    <div class="container">
-        <p>Data Structure</p>
-    </div>
-    <div class="container">
-        <p>Algorithms</p>
-    </div>
-
-</div>
+                  <v-card-actions class="pt-0">
+                    <v-btn
+                      color="teal-accent-4"
+                      text="Close"
+                      variant="text"
+                      @click="toggleReveal(lesson.id)"
+                    ></v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-expand-transition>
+                        </v-card>
+                    </v-slide-item>
+                </v-slide-group>
+            </v-col>
+        </v-row>
+    </v-container>
 
 </template>
 
 <script>
 
-import { VTooltip } from 'vuetify/components'
+import { db } from '../../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default {
-    components: {
-        VTooltip
+    data() {
+        return {
+            lessons: [],
+            selectedCard: 0,
+            revealedCards: {},
+        };
     },
-};
+
+    mounted() {
+        this.fetchLessons();
+    },
+
+    methods: {
+        async fetchLessons() {
+            try  {
+            const querySnapshot = await getDocs(collection(db, 'lessons'));
+
+
+            this.lessons = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                title: doc.data().title,
+                skillset: doc.data().skillset,
+                content: doc.data().content
+            }));
+            console.log(this.lessons); // debug
+        } catch (error) {
+            console.error('Error fetching lessons: ', error);
+        }
+    },
+
+        toggleReveal(id) {
+            this.$set(this.revealedCards, id, !this.revealedCards[id]);
+        },
+        isRevealed(id) {
+            return !!this.revealedCards[id];
+        },
+        updateFocusCard(index) {
+            // Ensures that the index is within the bounds of the lessons array
+            if (index >= 0 && index < this.lessons.length) {
+                this.selectedCard = index;
+        }
+    }
+}
+}
+
 
 </script>
 
 <style>
 
-.container {
-    width: 100px;
-    height: auto;
-    background-color: lightgray;
-    padding: 3px;
-    margin: 3px;
-    text-align: center;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-}
-
-.commands, .languages, .basic-cs, .advanced-cs, .data-structures {
-    display: flex;
-    justify-content: space-around; /* Distribute containers evenly */
-    flex-wrap: wrap; /* Allow wrapping to a new row if containers overflow */
-
-}
-
-.v-tooltip {
-    display: inline-block;
+.lesson-cards {
+  display: flex;
+  overflow-x: scroll;
+  flex-direction: row;
+  scroll-snap-type: mandatory;
+  scroll-snap-align: start;
+    flex: 0 0 auto;
     margin: 0 10px;
 }
+.main-card {
+  opacity: 1;
+  /* transition: opacity 0.3s ease; */
+}
+/* .neighbour-card {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+} */
 
+.lesson-card {
+    width: 300px;
+    margin: 0 10px;
+    scroll-snap-align: start;
+}
+
+.v-container {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+}
 
 </style>
