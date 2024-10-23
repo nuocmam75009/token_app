@@ -6,7 +6,8 @@
                 <v-slide-group
                     v-model="selectedCard"
                     show-arrows
-                    class="lesson-cards"
+                    id="lesson-cards"
+                    class="d-flex flex-row justify-"
                     center-active
                     @change="updateFocusCard"
                 >
@@ -120,12 +121,12 @@ export default {
 }
 .main-card {
   opacity: 1;
-  transition: opacity 0.3s ease;
+  /* transition: opacity 0.3s ease; */
 }
-.neighbour-card {
+/* .neighbour-card {
   opacity: 0.5;
   transition: opacity 0.3s ease;
-}
+} */
 
 .lesson-card {
     width: 300px;
