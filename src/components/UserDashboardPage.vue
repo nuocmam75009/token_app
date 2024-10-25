@@ -76,7 +76,7 @@
 
          <!-- Edit Information Modal -->
 
-              <v-dialog v-model="editDialog" max-width="500px">
+              <v-dialog v-model="editDialog">
               <v-card prepent-icon="mdi-account" title="Edit My Information">
                 <v-card-text>
                   <v-row dense>
@@ -114,7 +114,7 @@
                         <v-btn
                         color="red"
                         variant="plain"
-                        prepend-icon="mdi-close"
+                        prepend-icon="mdi-account-cancel"
                         @click="editDialog = false">Cancel</v-btn>
                       </v-card-actions>
 
