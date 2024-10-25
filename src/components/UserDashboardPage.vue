@@ -59,8 +59,16 @@
             <v-card-text>
               <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
               <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
-              <p><strong>DEBUG</strong> {{ results }}</p>
-              <v-btn color="blue" @click="detailsDialog">Show details</v-btn>
+              <p><strong>debug </strong> {{ this.results }}</p>
+              <v-dialog max-width="600">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                  color="blue"
+                  prepend-icon="mdi-information"
+                  v-bind="activatorProps"
+                  @click="detailsDialog">Show details</v-btn>
+                </template>
+              </v-dialog>
             </v-card-text>
           </v-card>
           </v-hover>
@@ -123,15 +131,26 @@
                       <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
                       <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
                       <p>More details about the quiz can be shown here...</p>
+
+                      <div v-if="results.length > 0">
+                          <ul>
+                              <li v-for="(result, index) in results" :key="index">
+                                  <strong>Question:</strong> {{ result.question }} <br>
+                                  <strong>Your Answer:</strong> {{ result.selectedAnswer }} <br>
+                                  <strong>Result:</strong> <span :class="{'correct': result.isCorrect, 'incorrect': !result.isCorrect}">
+                                      {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
+                                  </span>
+                              </li>
+                          </ul>
+                      </div>
+
+
                     </v-card-text>
                     <v-card-actions>
                       <v-btn color="blue" @click="detailsDialog = false">Close</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-
-
-
       </v-row>
     </v-container>
 
