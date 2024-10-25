@@ -96,11 +96,13 @@
 
                       <v-card-actions>
                         <v-spacer></v-spacer>
+                        <!--Save button -->
                         <v-btn
                         prepend-icon="mdi-content-save"
                         variant="tonal"
                         color="blue"
                         @click="editDialog = false">Save</v-btn>
+                        <!-- Cancel button -->
                         <v-btn
                         color="red"
                         variant="plain"
