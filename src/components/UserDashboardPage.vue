@@ -81,8 +81,7 @@
 
                     <v-col cols="12" md="4" sm="6">
                         <v-text-field
-                          label="Last Name"
-                          required
+                          label="Last Name" required
                           v-model="editedProfile.lastName"
                         ></v-text-field>
                       </v-col>
@@ -99,11 +98,14 @@
                         <v-spacer></v-spacer>
                         <v-btn
                         prepend-icon="mdi-content-save"
-                        color="blue" @click="saveProfile">Save</v-btn>
+                        variant="tonal"
+                        color="blue"
+                        @click="editDialog = false">Save</v-btn>
                         <v-btn
                         color="red"
+                        variant="plain"
                         prepend-icon="mdi-close"
-                        @click="dialog = false">Cancel</v-btn>
+                        @click="editDialog = false">Cancel</v-btn>
                       </v-card-actions>
 
                   </v-row>
@@ -112,7 +114,7 @@
             </v-dialog>
 
     <!-- Quiz Details Modal -->
-                <v-dialog v-model="detailsDialog" max-width="500px">
+                <v-dialog v-model="detailsDialog" max-width="800px">
                   <v-card>
                     <v-card-title>Quiz Details</v-card-title>
                     <v-card-text>
