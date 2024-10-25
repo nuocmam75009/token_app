@@ -18,12 +18,23 @@
             <v-card-text>
               <v-row>
                 <v-col cols="12">
-                  <p><strong>First Name:</strong> {{  }}</p>
-                  <p><strong>Last Name:</strong> {{  }}</p>
-                  <p><strong>Email:</strong> {{  }}</p>
+                  <p><strong>First Name:</strong> {{ firstName }}</p>
+                  <p><strong>Last Name:</strong> {{ lastName }}</p>
+                  <p><strong>Email:</strong> {{ emailAdress }}</p>
                 </v-col>
               </v-row>
-              <v-btn color="blue" @click="editInfo">Edit Information</v-btn>
+                  <v-dialog max-width="600">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn
+                        color="blue"
+                        @click="editDialog = true"
+                        prepend-icon="mdi-account-edit"
+                        class="text-none-font-weight-regular"
+                        v-bind="activatorProps"
+                      >Edit Your Info</v-btn>
+                    </template>
+                  </v-dialog>
+
             </v-card-text>
           </v-card>
             </v-hover>
@@ -46,91 +57,202 @@
             </v-card-title>
 
             <v-card-text>
-              <p><strong>Quiz Title:</strong> {{  }}</p>
-              <p><strong>Score:</strong> {{  }}%</p>
-              <v-btn color="blue" @click="editInfo">Show details</v-btn>
+              <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
+              <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
+              <p><strong>DEBUG</strong> {{ results }}</p>
+              <v-btn color="blue" @click="detailsDialog">Show details</v-btn>
             </v-card-text>
           </v-card>
           </v-hover>
         </v-col>
+
+         <!-- Edit Information Modal -->
+
+              <v-dialog v-model="editDialog" max-width="500px">
+              <v-card prepent-icon="mdi-account" title="Edit My Information">
+                <v-card-text>
+                  <v-row dense>
+                    <v-col cols="12" md="4" sm="6">
+                      <v-text-field
+                      v-model="editedProfile.firstName"
+                      label="First Name" required
+                      ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" md="4" sm="6">
+                        <v-text-field
+                          label="Last Name"
+                          required
+                          v-model="editedProfile.lastName"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-col cols="12" md="4" sm="6">
+                        <v-text-field
+                          label="Email Address"
+                          required
+                          v-model="editedProfile.email"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                        prepend-icon="mdi-content-save"
+                        color="blue" @click="saveProfile">Save</v-btn>
+                        <v-btn
+                        color="red"
+                        prepend-icon="mdi-close"
+                        @click="dialog = false">Cancel</v-btn>
+                      </v-card-actions>
+
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+
+    <!-- Quiz Details Modal -->
+                <v-dialog v-model="detailsDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>Quiz Details</v-card-title>
+                    <v-card-text>
+                      <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
+                      <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
+                      <p>More details about the quiz can be shown here...</p>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn color="blue" @click="detailsDialog = false">Close</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+
+
+
       </v-row>
     </v-container>
+
+
   </template>
 
 <script>
 
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../../config/firebase';
-
+import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 
 export default {
     name: 'UserDashboard',
     data() {
         return {
+            dialog: false,
+            editDialog: false,
+            detailsDialog: false,
             results: [],
             firstName: '',
             lastName: '',
             emailAdress: '',
             loading: true,
+            editedProfile: {
+                firstName: '',
+                lastName: '',
+                email: '',
+            },
         };
     },
-    async mounted() {
-        try  {
-            const user = auth.currentUser;
-            if (user) {
-                // Get user results from Firestore
-                const userResultsDocRef = doc(
-                    db,
-                    'quizzResults',
-                    user.uid
-                );
-                const docSnap = await getDoc(userResultsDocRef);
+        async created() {
+            onAuthStateChanged(auth, async (user) =>  {
+                if (user) {
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userSnap = await getDoc(userDocRef);
 
-                if (docSnap.exists()) {
-                    // If document exists, access stored results
-                    this.results = docSnap.data().results; // access stored results
+                    if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    this.firstName = userData.firstName;
+                    this.lastName = userData.lastName;
+                    this.emailAdress = userData.email;
+                    this.results = userData.results || [];
+
+                    // Init with edited info
+
+                    this.editedProfile = {
+                        firstName:this.firstName,
+                        lastName: this.lastName,
+                        email: this.emailAdress,
+                    };
+                    } else {
+                        console.log('No such user found in Firestore');
+                    }
                 } else {
-                    console.log('No results found');
+                    console.log('No user is signed in');
                 }
-            }
-        } catch (error) {
-            // Handle error
-            console.error('Error fetching user results:', error);
-        }
-    },
-
-    async created() {
-        try {
-
-            const userId = "USER_ID";
-            const userRef = doc(db, 'users', userId);
-            const userSnap = await getDoc(userRef);
-
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-        this.firstName = userData.firstName;
-        this.lastName = userData.lastName;
-        this.email = userData.email;
-        this.results = userData.results || [];
-            } else {
-                console.log('No user');
-            }
-        } catch (error) {
-            console.error('Error fetching user:', error);
-        } finally {
-            this.loading = false;
-        }
-    },
+            });
+        },
 
     methods: {
-        editInfo() {
-            this.$router.push('/edit-info');
+        async saveProfile() {
+          try {
+            const user = auth.currentUser;
+            if (user) {
+            const userRef = doc(db, 'users', user.uid);
+            await updateDoc(userRef, {
+              // Update the Firestore data
+              firstName: this.editedProfile.firstName,
+              lastName: this.editedProfile.lastName,
+              email: this.editedProfile.email,
+            });
+            // Update the local data
+            this.firstName = this.editedProfile.firstName;
+            this.lastName = this.editedProfile.lastName;
+            this.emailAdress = this.editedProfile.email;
+
+            // Close dialog
+            this.editDialog = false;
+            }
+          }  catch (error) {
+            console.error('Error updating user info:', error);
         }
-    }
+        }
+    },
 
 };
 
+export const createUser = async (
+    email,
+    password,
+    firstName,
+    lastName
+) => {
+    try {
+        const userCredential =
+        await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
+        // If user is created => add user to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+            firstName,
+            lastName,
+            email,
+            results: [],
+        });
+        console.log('User created');
+    } catch (error) {
+        console.error('Error creating user:', error);
+    }
+};
+
+
+/* const updateUser = async (uid, updatedData) => {
+  const userRef = doc(db, 'users', uid);
+
+  try {
+    await updateDoc(userRef, updatedData);
+    console.log('User information updated successfully');
+  } catch (error) {
+    console.error('Error updating user info:', error);
+  }
+};
+
+ */
 </script>
 
 <style>

@@ -26,3 +26,26 @@ const googleProvider = new GoogleAuthProvider();
 
 
 export { app, db, auth, googleProvider };
+
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
+
+export const createUser = async (email, password, firstName, lastName) => {
+  try {
+    // Create user with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Store the user's information in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      firstName,
+      lastName,
+      email,
+      results: [] // Initialize results as an empty array
+    });
+
+    console.log('User created and added to Firestore');
+  } catch (error) {
+    console.error('Error creating user or storing data:', error);
+  }
+};
