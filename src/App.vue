@@ -10,7 +10,7 @@
 
       <v-list>
         <v-list-item>
-          Token.io
+          
           </v-list-item>
       </v-list>
 
