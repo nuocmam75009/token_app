@@ -2,24 +2,25 @@
 <template>
     <form name="login-form" @submit.prevent="login">
         <div class="mb-3">
-            <label for="username">Email adress:</label>
-                    <input
-                    id="username"
-                    type="text"
-                    v-model="input.email" required
-                    placeholder="Enter your email adress babygirl"
-                    />
-                    <!-- // v-model to store the input value in the data object -->
+            <label for="username">Email address:</label>
+            <input
+                id="username"
+                type="text"
+                v-model="input.email"
+                required
+                placeholder="Enter your email address"
+            />
+            <!-- v-model to store the input value in the data object -->
         </div>
         <div class="mb-3">
             <label for="password">Password:</label>
-                <input
+            <input
                 id="password"
                 type="password"
                 v-model="input.password"
                 required
-                placeholder="Enter your password babygirl"
-                />
+                placeholder="Enter your password"
+            />
         </div>
         <button class="btn-primary" type="submit">
             Login
@@ -29,7 +30,7 @@
     <div class="google-login">
         <h2>
             <button @click="LoginWithGoogle">
-                SignIn with your Google account
+                Sign in with your Google account
             </button>
         </h2>
     </div>
@@ -115,47 +116,6 @@ export default {
 
       <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
-button {
-    background-color: #72a1cf;
-    color: white;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 20%;
-    margin-top: 5px;
-}
-
-label {
-    font-size: 18px;
-    margin-top: 10px;
-    padding: 5px;
-}
-.mb-3 {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-    margin-top: 5px;
-}
 
 
 </style>
