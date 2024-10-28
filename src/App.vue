@@ -24,7 +24,7 @@
         <v-list-item prepend-icon="mdi-book" to="/test">
           Resources
         </v-list-item>
-        <v-list-item prepend-icon="mdi-account-arrow-right" to="/test">
+        <v-list-item prepend-icon="mdi-account-arrow-right" to="/">
           Sign out
         </v-list-item>
       </v-list>

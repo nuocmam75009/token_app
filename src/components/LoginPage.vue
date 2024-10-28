@@ -86,11 +86,11 @@ export default {
 
                 } catch (error) {
                     // Unsuccessful login
-                    this.error = "Invalid username or password babygirl!";
+                    this.error = "Invalid username or password";
                 }
             } else {
                 // Display error if empty
-                this.error = "Username and password cannot be empty babygirl!";
+                this.error = "Username and password cannot be empty";
             }
         },
         async LoginWithGoogle() {
