@@ -10,7 +10,7 @@
 
       <v-list>
         <v-list-item>
-          
+
           </v-list-item>
       </v-list>
 
@@ -23,6 +23,9 @@
         </v-list-item>
         <v-list-item prepend-icon="mdi-book" to="/test">
           Resources
+        </v-list-item>
+        <v-list-item prepend-icon="mdi-account-arrow-right" to="/test">
+          Sign out
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
