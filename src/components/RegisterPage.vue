@@ -29,6 +29,7 @@ import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } f
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 
 export default {
+  name: 'RegisterPage',
   data() {
     return {
       email: '',
@@ -41,7 +42,7 @@ export default {
       errorMessage: '',
 
       // Validation rules
-      emailsRules: [
+      emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
