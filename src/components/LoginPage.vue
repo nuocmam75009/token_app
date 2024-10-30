@@ -1,47 +1,25 @@
-// Login Page
 <template>
-    <form name="login-form" @submit.prevent="login">
-        <div class="mb-3">
-            <label for="username">Email adress:</label>
-                    <input
-                    id="username"
-                    type="text"
-                    v-model="input.email" required
-                    placeholder="Enter your email adress babygirl"
-                    />
-                    <!-- // v-model to store the input value in the data object -->
-        </div>
-        <div class="mb-3">
-            <label for="password">Password:</label>
-                <input
-                id="password"
-                type="password"
-                v-model="input.password"
-                required
-                placeholder="Enter your password babygirl"
-                />
-        </div>
-        <button class="btn-primary" type="submit">
-            Login
-        </button>
-    </form>
-
-    <div class="google-login">
-        <h2>
-            <button @click="LoginWithGoogle">
-                SignIn with your Google account
-            </button>
-        </h2>
-    </div>
-    <!-- <h3>Output: {{ this.output }}  </h3> -->
+    <v-container>
+        <v-sheet class="mx-auto grey lighten-3" width="500">
+            <v-card class="mx-auto px-6 py-8" max-width="auto">
+                <v-form v-model="form" @submit.prevent="loginUser">
+                    <v-text-field v-model="email" label="Email" required :rules="emailRules"></v-text-field>
+                    <v-text-field v-model="password" label="Password" type="password" required :rules="passwordRules"></v-text-field>
+                    <br />
+                    <br />
+                    <v-btn prepend-icon="mdi-account" type="submit" color="blue" class="my-2">Log in</v-btn>
+                    <v-btn prepend-icon="mdi-account" @click="loginWithGoogle" class="my-2" color="blue">Log in with your Google account</v-btn>
+                    <v-alert v-if="errorMessage" type="error" class="mt-4">{{ errorMessage }}</v-alert>
+                </v-form>
+            </v-card>
+        </v-sheet>
+    </v-container>
 </template>
 
-
 <script>
-import { SET_AUTHENTICATION, SET_USERNAME } from '@/store/storeconstants';
-import { auth, googleProvider } from "../../config/firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-
+import { auth, db } from "../../config/firebase";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default {
     name: 'LoginPage',
@@ -49,113 +27,111 @@ export default {
         return {
             input: {
                 email: "",
-                password: ""
+                password: "",
+                results: [],
+                googleLoading: false,
+                form: false,
+                errorMessage: '',
+                // Rules for validation
+                emailRules: [
+                    v => !!v || 'E-mail is required',
+                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                ],
+                passwordRules: [
+                    v => !!v || 'Password is required',
+                    v => v.length >= 6 || 'Password must be at least 6 characters',
+                ],
             },
-            error: "", // store error message
         }
     },
     methods: {
-        async login() {
-            // Using Vuex to manage login state.
-            // Commit the authentication state to true if the user is authenticated
-            // Redirecting to dashboard if the user is authenticated
-            // Handling error: no empty username and password
+        async loginUser() {
+            try {
+                // Sign in with email and password
+                const userCredential = await signInWithEmailAndPassword(
+                    auth,
+                    this.input.email,
+                    this.input.password
+                );
 
-            if (this.input.email && this.input.password) {
-                try {
-                    const userCredential = await signInWithEmailAndPassword(
-                        auth,
-                        this.input.email,
-                        this.input.password
-                    );
-                    // Get authenticated user's info
-                    const user = userCredential.user;
+                const user = userCredential.user;
+                // Check if user exists in Firestore
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
 
-                    // Commit to Vuex store
-                    this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
-                    this.$store.commit(`auth/${SET_USERNAME}`, user.email);
-
-                    // Routing to dashboard :) :) hihi
-                    this.$router.push({
-                        path: '/userdashboard',
-                        query: {
-                            results: JSON.stringify(this.results), // pass results as query params
-                        }
-                    });
-
-                } catch (error) {
-                    // Unsuccessful login
-                    this.error = "Invalid username or password babygirl!";
+                if (!userDoc.exists()) {
+                    this.errorMessage = "User does not exist";
+                } else {
+                    this.$router.push('/userdashboard');
                 }
-            } else {
-                // Display error if empty
-                this.error = "Username and password cannot be empty babygirl!";
+            } catch (error) {
+                console.error("Error signing in with email and password:", error);
+                // Different errors
+                switch (error.code) {
+                    case "auth/user-not-found":
+                        this.errorMessage = "User not found. Please create an account";
+                        break;
+                    case "auth/wrong-password":
+                        this.errorMessage = "Wrong password";
+                        break;
+                    case "auth/invalid-email":
+                        this.errorMessage = "Invalid email";
+                        break;
+                    default:
+                        this.errorMessage = "An error occured. Please try again";
+                }
             }
         },
-        async LoginWithGoogle() {
-            // Login with Google
+
+        async loginWithGoogle() {
             try {
-                // Creates Google Access Token for Google's API
-                // user stores the user's info
+                this.googleLoading = true;
+                this.errorMessage = "";
+
+                const googleProvider = new GoogleAuthProvider();
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
-                console.log("User info:", user);
-                // As normal login, redirects to user dashboard
+
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                // Create new instance in Firestore if user does not exist
+                if (!userDoc.exists()) {
+                    const names = user.displayName?.split(' ') || ['', ''];
+                    await setDoc(userDocRef, {
+                        firstName: names[0],
+                        lastName: names[1],
+                        email: user.email,
+                        results: [],
+                        createdAt: new Date(),
+                    });
+                }
                 this.$router.push('/userdashboard');
             } catch (error) {
-                console.error("Error signing in with Google:", error);
+                console.error("Error logging in with Google: ", error);
+                // Handle different errors
+                switch (error.code) {
+                    case "auth/popup-closed-by-user":
+                        this.errorMessage = "Google popup was closed";
+                        break;
+                    case "auth/popup-blocked":
+                        this.errorMessage = "Popup blocked";
+                        break;
+                    case "auth/cancelled-popup-request":
+                        this.errorMessage = "Popup request cancelled";
+                        break;
+                    default:
+                        this.errorMessage = "An error occured. Please try again";
+                }
+            } finally {
+                this.googleLoading = false;
             }
         },
     },
 };
-
-
 </script>
 
 
-      <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
-button {
-    background-color: #72a1cf;
-    color: white;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 20%;
-    margin-top: 5px;
-}
-
-label {
-    font-size: 18px;
-    margin-top: 10px;
-    padding: 5px;
-}
-.mb-3 {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-    margin-top: 5px;
-}
-
 
 </style>
