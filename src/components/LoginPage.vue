@@ -1,52 +1,22 @@
-// Login Page
 <template>
-    <v-sheet>
-    <v-card>
-    <form name="login-form" @submit.prevent="login">
-        <div class="mb-3">
-            <label for="username">Email address:</label>
-            <input
-                id="username"
-                type="text"
-                v-model="input.email"
-                required
-                placeholder="Enter your email address"
-            />
-            <!-- v-model to store the input value in the data object -->
-        </div>
-        <div class="my-2">
-            <label for="password">Password:</label>
-            <input
-                id="password"
-                type="password"
-                v-model="input.password"
-                required
-                placeholder="Enter your password"
-            />
-        </div>
-        <v-btn
-        type="submit"
-        color="blue"
-        class="my-2"
-        width="100%"
-        >
-            Login
-        </v-btn>
-    </form>
+    <v-container>
+        <v-sheet class="mx-auto grey lighten-3" width="500">
+            <v-card class="mx-auto px-6 py-8" max-width="auto">
+            <v-form v-model="form" @submit.prevent="login">
+                <v-text-field v-model="email" label="Email" required></v-text-field>
+                <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
+                <br/>
+                <br/>
+                <v-btn prepend-icon="mdi-account" type="submit" color="blue" class="my-2">Login</v-btn>
+                <v-btn prepend-icon="mdi-account" @click="loginWithGoogle" class="my-2" color="blue">Sign in with your Google account</v-btn>
+                <v-alert v-if="errorMessage" type="error" class="mt-4">{{ errorMessage }}</v-alert>
 
-            <v-btn
-                class="my-2"
-                width="100%"
-                color="blue"
-                @click="LoginWithGoogle"
-            >
-                Sign in with your Google account
-            </v-btn>
-        </v-card>
+            </v-form>
+    </v-card>
     </v-sheet>
 
+    </v-container>
 
-    <!-- <h3>Output: {{ this.output }}  </h3> -->
 </template>
 
 
@@ -105,7 +75,7 @@ export default {
                 this.error = "Username and password cannot be empty";
             }
         },
-        async LoginWithGoogle() {
+        async loginWithGoogle() {
             // Login with Google
             try {
                 // Creates Google Access Token for Google's API
