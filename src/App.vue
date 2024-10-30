@@ -5,6 +5,7 @@
       app
       expand-on-hover
       rail
+      background="grey lighten-2"
       open-delay="200"
       >
 

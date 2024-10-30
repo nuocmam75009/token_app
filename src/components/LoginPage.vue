@@ -1,5 +1,7 @@
 // Login Page
 <template>
+    <v-sheet>
+    <v-card>
     <form name="login-form" @submit.prevent="login">
         <div class="mb-3">
             <label for="username">Email address:</label>
@@ -12,7 +14,7 @@
             />
             <!-- v-model to store the input value in the data object -->
         </div>
-        <div class="mb-3">
+        <div class="my-2">
             <label for="password">Password:</label>
             <input
                 id="password"
@@ -22,18 +24,28 @@
                 placeholder="Enter your password"
             />
         </div>
-        <button class="btn-primary" type="submit">
+        <v-btn
+        type="submit"
+        color="blue"
+        class="my-2"
+        width="100%"
+        >
             Login
-        </button>
+        </v-btn>
     </form>
 
-    <div class="google-login">
-        <h2>
-            <button @click="LoginWithGoogle">
+            <v-btn
+                class="my-2"
+                width="100%"
+                color="blue"
+                @click="LoginWithGoogle"
+            >
                 Sign in with your Google account
-            </button>
-        </h2>
-    </div>
+            </v-btn>
+        </v-card>
+    </v-sheet>
+
+
     <!-- <h3>Output: {{ this.output }}  </h3> -->
 </template>
 
@@ -50,7 +62,7 @@ export default {
         return {
             input: {
                 email: "",
-                password: ""
+                password: "",
             },
             error: "", // store error message
         }
