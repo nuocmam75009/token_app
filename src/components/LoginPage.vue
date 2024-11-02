@@ -7,8 +7,8 @@
                     <v-text-field v-model="password" label="Password" type="password" required :rules="passwordRules"></v-text-field>
                     <br />
                     <br />
-                    <v-btn prepend-icon="mdi-account" type="submit" color="blue" class="my-2">Log in</v-btn>
-                    <v-btn prepend-icon="mdi-account" @click="loginWithGoogle" class="my-2" color="blue">Log in with your Google account</v-btn>
+                    <v-btn prepend-icon="mdi-account" :loading="loading" type="submit" color="blue" class="my-2">Log in</v-btn>
+                    <v-btn prepend-icon="mdi-account" :loading="googleLoading" @click="loginWithGoogle" class="my-2" color="blue">Log in with your Google account</v-btn>
                     <v-alert v-if="errorMessage" type="error" class="mt-4">{{ errorMessage }}</v-alert>
                 </v-form>
             </v-card>
@@ -25,13 +25,14 @@ export default {
     name: 'LoginPage',
     data() {
         return {
-            input: {
                 email: "",
                 password: "",
                 results: [],
                 googleLoading: false,
                 form: false,
                 errorMessage: '',
+
+
                 // Rules for validation
                 emailRules: [
                     v => !!v || 'E-mail is required',
@@ -41,7 +42,6 @@ export default {
                     v => !!v || 'Password is required',
                     v => v.length >= 6 || 'Password must be at least 6 characters',
                 ],
-            },
         }
     },
     methods: {
@@ -133,5 +133,11 @@ export default {
 
 
 <style>
+
+.error {
+    color: red;
+    display: block;
+    margin-top: auto;
+}
 
 </style>
