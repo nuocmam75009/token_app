@@ -1,7 +1,9 @@
 <template>
 
     <v-container>
-        <v-row>
+        <v-row
+        justify="center"
+        >
             <v-col cols="12">
                 <v-slide-group
                     v-model="selectedCard"
@@ -27,9 +29,7 @@
                                 <p class="test-h4 font-weight-black">
                                     {{ lesson.title }}
                                 </p>
-                                <p>
-                                    Skillset: {{ lesson.skillset }}
-                                </p>
+
                                 <div class="text-medium-emphasis">
                                     {{ lesson.content }}
                                 </div>
@@ -109,7 +109,8 @@ export default {
                 id: doc.id,
                 title: doc.data().title,
                 skillset: doc.data().skillset,
-                content: doc.data().content
+                content: doc.data().content,
+                details: doc.data().details | "",
             }));
             console.log(this.lessons); // debug
         } catch (error) {
@@ -148,12 +149,7 @@ export default {
 }
 .main-card {
   opacity: 1;
-  /* transition: opacity 0.3s ease; */
 }
-/* .neighbour-card {
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-} */
 
 .lesson-card {
     width: 300px;
