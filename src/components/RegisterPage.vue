@@ -9,8 +9,8 @@
                 <v-text-field v-model="lastName" label="Last Name" required></v-text-field>
                 <br/>
                 <br/>
-                <v-btn prepend-icon="mdi-account" type="submit" color="blue" class="my-2">Create a new account</v-btn>
-                <v-btn prepend-icon="mdi-account" @click="loginWithGoogle" class="my-2" color="blue">Sign in with your Google account</v-btn>
+                <v-btn prepend-icon="mdi-account" :loading="loading" type="submit" color="blue" class="my-2">Create a new account</v-btn>
+                <v-btn prepend-icon="mdi-account" :loading="googleLoading" @click="loginWithGoogle" class="my-2" color="blue">Sign in with your Google account</v-btn>
                 <v-alert v-if="errorMessage" type="error" class="mt-4">{{ errorMessage }}</v-alert>
 
             </v-form>
@@ -164,5 +164,9 @@ export default {
 
 <style>
 
+.error {
+  color: red;
+  display: block;
+}
 
 </style>
