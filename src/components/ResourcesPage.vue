@@ -9,7 +9,7 @@
                     v-model="selectedCard"
                     show-arrows
                     id="lesson-cards"
-                    class="d-flex flex-row justify-"
+                    class="d-flex flex-row justify-center"
                     center-active
                     @change="updateFocusCard"
                 >
@@ -26,7 +26,7 @@
                                 <div>
                                     Lesson
                                 </div>
-                                <p class="test-h4 font-weight-black">
+                                <p class="text-h4 font-weight-black">
                                     {{ lesson.title }}
                                 </p>
 
@@ -39,21 +39,20 @@
 
                             <v-card-actions>
                                 <v-btn
-                                @click="toggleReveal(lesson.extra_content)"
+                                @click="toggleReveal(lesson.id)"
                                 color="teal-accent-4"
-                                text="Learn More"
                                 variant="text"
                                 >
-                                    {{ lesson.content_1 }}
+                                    Learn more :)
                                 </v-btn>
                             </v-card-actions>
 
                             <v-expand-transition>
                 <v-card
-                  v-if="isRevealed(lesson.id)"
-                  class="position-absolute w-100"
+                  v-if="revealedCards.has(lesson.id)"
+                  class="v-card--reveal"
                   height="100%"
-                  style="bottom: 0"
+                  style="height: 100%; position: absolute; bottom: 0; left: 0; right: 0; background-color: white;"
                 >
                   <v-card-text class="pb-0">
                     <p class="text-h4">Additional Details</p>
@@ -65,10 +64,11 @@
                   <v-card-actions class="pt-0">
                     <v-btn
                       color="teal-accent-4"
-                      text="Close"
                       variant="text"
                       @click="toggleReveal(lesson.id)"
-                    ></v-btn>
+                    >
+                    Close
+                </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-expand-transition>
@@ -90,8 +90,8 @@ export default {
     data() {
         return {
             lessons: [],
-            selectedCard: 0,
-            revealedCards: {},
+            selectedCard: null,
+            revealedCards: new Set(),
         };
     },
 
@@ -101,28 +101,35 @@ export default {
 
     methods: {
         async fetchLessons() {
-            try  {
+            this.loading = true;
+            this.error = null;
+
+        try {
             const querySnapshot = await getDocs(collection(db, 'lessons'));
-
-
             this.lessons = querySnapshot.docs.map(doc => ({
                 id: doc.id,
-                title: doc.data().title,
-                skillset: doc.data().skillset,
-                content: doc.data().content,
-                details: doc.data().details | "",
+                ...doc.data(),
+                details: doc.data().details || 'No additional details available', // Ensure details has a default value
             }));
-            console.log(this.lessons); // debug
         } catch (error) {
-            console.error('Error fetching lessons: ', error);
+            console.error('Error fetching lessons:', error);
+            this.error = error.message;
+        } finally {
+            this.loading = false;
         }
+
     },
 
         toggleReveal(id) {
-            this.$set(this.revealedCards, id, !this.revealedCards[id]);
+            // using set to keep track of revealed cards
+            if (this.revealedCards.has(id)) {
+                this.revealedCards.delete(id);
+            } else {
+                this.revealedCards.add(id);
+            }
         },
         isRevealed(id) {
-            return !!this.revealedCards[id];
+            return this.revealedCards.has(id);
         },
         updateFocusCard(index) {
             // Ensures that the index is within the bounds of the lessons array
