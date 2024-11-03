@@ -22,7 +22,7 @@
         <v-list-item prepend-icon="mdi-account" to="/userdashboard">
           My Dashboard
         </v-list-item>
-        <v-list-item prepend-icon="mdi-book" to="/test">
+        <v-list-item prepend-icon="mdi-book" to="/resources">
           Resources
         </v-list-item>
         <v-list-item prepend-icon="mdi-account-arrow-right" to="/">
