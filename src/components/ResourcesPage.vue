@@ -149,6 +149,15 @@ export default {
 </script>
 
 <style>
+.resources-page {
+    padding: 1rem;
+}
+
+.lesson-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) ;
+}
 
 .lesson-cards {
   display: flex;
@@ -171,6 +180,9 @@ export default {
 
 .lesson-card {
     width: 300px;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     margin: 0 10px;
     scroll-snap-align: start;
 }
@@ -183,5 +195,10 @@ export default {
 
 .error {
     color: red;
+}
+
+.lesson-card.focused {
+    border-color: #42b983;
+    box-shadow: 0 0 8px rgba(66, 185, 131, 0.4);
 }
 </style>
