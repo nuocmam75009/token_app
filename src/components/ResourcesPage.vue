@@ -87,9 +87,13 @@ import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 export default {
+    name: 'ResourcesPage',
     data() {
         return {
             lessons: [],
+            loading: false,
+            error: null,
+            focusedCardIndex: -1,
             selectedCard: null,
             revealedCards: new Set(),
         };
@@ -121,6 +125,8 @@ export default {
     },
 
         toggleReveal(id) {
+            if (!id) return;
+
             // using set to keep track of revealed cards
             if (this.revealedCards.has(id)) {
                 this.revealedCards.delete(id);
@@ -129,13 +135,12 @@ export default {
             }
         },
         isRevealed(id) {
-            return this.revealedCards.has(id);
+            return id && this.revealedCards.has(id);
         },
         updateFocusCard(index) {
             // Ensures that the index is within the bounds of the lessons array
-            if (index >= 0 && index < this.lessons.length) {
-                this.selectedCard = index;
-        }
+            if (index < 0 || index >= this.lessons.length) return;
+                this.focusedCard.index = index;
     }
 }
 }
@@ -154,6 +159,12 @@ export default {
     flex: 0 0 auto;
     margin: 0 10px;
 }
+
+.loading, .error {
+    text-align: center;
+    padding: 2rem;
+}
+
 .main-card {
   opacity: 1;
 }
@@ -170,4 +181,7 @@ export default {
     overflow-x: auto;
 }
 
+.error {
+    color: red;
+}
 </style>
