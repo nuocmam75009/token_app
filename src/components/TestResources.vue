@@ -121,12 +121,7 @@ export default {
 }
 .main-card {
   opacity: 1;
-  /* transition: opacity 0.3s ease; */
 }
-/* .neighbour-card {
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-} */
 
 .lesson-card {
     width: 300px;
