@@ -1,84 +1,101 @@
 <template>
-
     <v-container>
-        <v-row
-        justify="center"
-        >
+        <v-row justify="center">
             <v-col cols="12">
-                <v-slide-group
-                    v-model="selectedCard"
-                    show-arrows
-                    id="lesson-cards"
-                    class="d-flex flex-row justify-center"
-                    center-active
-                    @change="updateFocusCard"
+                <v-data-iterator
+                    :items="lessons"
+                    :items-per-page="itemsPerPage"
+                    :page="page"
+                    :search="search"
+                    :sort-by="sortBy"
+                    :sort-desc="sortDesc"
                 >
-                <v-slide-item
-                    v-for="(lesson, index) in lessons"
-                    :key="lesson.id"
-                    >
+                    <template v-slot:header>
+                        <v-toolbar flat>
+                            <v-text-field
+                                v-model="search"
+                                clearable
+                                flat
+                                hide-details
+                                prepend-inner-icon="mdi-magnify"
+                                label="search"
+                            ></v-text-field>
+                            <v-spacer></v-spacer>
+                            <v-select
+                                v-model="sortBy"
+                                flat
+                                hide-details
+                                :items="sortByItems"
+                                prepend-inner-icon="mdi-sort"
+                                label="Sort by"
+                            ></v-select>
+                            <v-btn-toggle v-model="sortDesc">
+                                <v-btn :value="false" icon="mdi-arrow-up"></v-btn>
+                                <v-btn :value="true" icon="mdi-arrow-down"></v-btn>
+                            </v-btn-toggle>
+                        </v-toolbar>
+                    </template>
 
-                    <!-- Card layout -->
-
-                        <v-card :elevation="index === selectedCard ? 12 : 2" id="lesson-card" class="mx-4" max-width="344">
-
-                            <v-card-text>
-                                <div>
-                                    Lesson
-                                </div>
-                                <p class="text-h4 font-weight-black">
-                                    {{ lesson.title }}
-                                </p>
-
-                                <div class="text-medium-emphasis">
-                                    {{ lesson.content }}
-                                </div>
-                            </v-card-text>
-
-
-
-                            <v-card-actions>
-                                <v-btn
-                                @click="toggleReveal(lesson.id)"
-                                color="teal-accent-4"
-                                variant="text"
+                    <template v-slot:default="{ items }">
+                        <v-row>
+                            <v-col
+                                v-for="(lesson, index) in items"
+                                :key="lesson.id"
+                                cols="12"
+                                sm="6"
+                                md="4"
+                                lg="3"
+                            >
+                                <v-card
+                                    :elevation="selectedCard === index ? 12 : 2"
+                                    @click="updateFocusCard(index)"
+                                    class="mx-2 my-2"
                                 >
-                                    Learn more :)
-                                </v-btn>
-                            </v-card-actions>
+                                    <v-card-title>{{ lesson.title }}</v-card-title>
 
-                            <v-expand-transition>
-                <v-card
-                  v-if="revealedCards.has(lesson.id)"
-                  class="v-card--reveal"
-                  height="100%"
-                  style="height: 100%; position: absolute; bottom: 0; left: 0; right: 0; background-color: white;"
-                >
-                  <v-card-text class="pb-0">
-                    <p class="text-h4">Additional Details</p>
-                    <p class="text-medium-emphasis">
-                      {{ lesson.details }}
-                    </p>
-                  </v-card-text>
+                                    <v-card-text>
+                                        <div v-if="isRevealed(lesson.id)">
+                                            {{ lesson.details }}
+                                        </div>
+                                        <div v-else>
+                                            Click to reveal details
+                                        </div>
+                                    </v-card-text>
 
-                  <v-card-actions class="pt-0">
-                    <v-btn
-                      color="teal-accent-4"
-                      variant="text"
-                      @click="toggleReveal(lesson.id)"
-                    >
-                    Close
-                </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-expand-transition>
-                        </v-card>
-                    </v-slide-item>
-                </v-slide-group>
+                                    <v-card-actions>
+                                        <v-btn
+                                            @click.stop="toggleReveal(lesson.id)"
+                                            color="primary"
+                                        >
+                                            {{ isRevealed(lesson.id) ? 'Hide' : 'Show' }} Details
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </template>
+
+                    <template v-slot:footer>
+                        <v-toolbar flat>
+                            <v-select
+                                v-model="lessonsPerPage"
+                                flat
+                                hide-details
+                                :items="[4, 8, 12, 16]"
+                                label="Lessons per page"
+                            ></v-select>
+                            <v-spacer></v-spacer>
+                            <v-pagination
+                                v-model="page"
+                                :length="Math.ceil(lessons.length / lessonsPerPage)"
+                                :total-visible="7"
+                            ></v-pagination>
+                        </v-toolbar>
+                    </template>
+                </v-data-iterator>
             </v-col>
         </v-row>
     </v-container>
-
 </template>
 
 <script>
@@ -96,6 +113,15 @@ export default {
             focusedCardIndex: -1,
             selectedCard: null,
             revealedCards: new Set(),
+            page: 1,
+            lessonsPerPage: 8,
+            search: '',
+            sortBy: 'title',
+            sortDesc: false,
+            sortByItems: [
+                { text:'Title', value: 'title' },
+                { text:'Date', value: 'date' },
+            ]
         };
     },
 
@@ -140,7 +166,7 @@ export default {
         updateFocusCard(index) {
             // Ensures that the index is within the bounds of the lessons array
             if (index < 0 || index >= this.lessons.length) return;
-                this.focusedCard.index = index;
+                this.focusedCardIndex = index;
     }
 }
 }
@@ -149,56 +175,5 @@ export default {
 </script>
 
 <style>
-.resources-page {
-    padding: 1rem;
-}
 
-.lesson-container {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) ;
-}
-
-.lesson-cards {
-  display: flex;
-  overflow-x: scroll;
-  flex-direction: row;
-  scroll-snap-type: mandatory;
-  scroll-snap-align: start;
-    flex: 0 0 auto;
-    margin: 0 10px;
-}
-
-.loading, .error {
-    text-align: center;
-    padding: 2rem;
-}
-
-.main-card {
-  opacity: 1;
-}
-
-.lesson-card {
-    width: 300px;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 0 10px;
-    scroll-snap-align: start;
-}
-
-.v-container {
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-}
-
-.error {
-    color: red;
-}
-
-.lesson-card.focused {
-    border-color: #42b983;
-    box-shadow: 0 0 8px rgba(66, 185, 131, 0.4);
-}
 </style>
