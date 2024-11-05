@@ -39,15 +39,5 @@
 
 <style>
 
-.start {
-    background-color: #72a1cf;
-    color: white;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
 
 </style>
