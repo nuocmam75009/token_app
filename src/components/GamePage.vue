@@ -1,39 +1,52 @@
 <template>
-    <div class="game">
-        <h2>You are now playing in {{ mode }} mode</h2>
+    <v-container class="game">
+      <v-card class="mb-5" color="primary" dark>
+        <v-card-title>You are now playing in {{ mode }} mode</v-card-title>
+      </v-card>
 
-        <div v-if="timer > 0">Time left: {{ timer }} seconds</div>
-        <div v-else>Time's up!</div>
+      <v-alert v-if="timer > 0" type="info" class="text-h6">
+        Time left: {{ timer }} seconds
+      </v-alert>
+      <v-alert v-else type="error" class="text-h6">
+        Time's up!
+      </v-alert>
 
-        <div v-if="questions.length > 0">
-            <div class="question">
-                <p>{{ currentQuestion.question }}</p>
-                <div class="options">
-                    <button v-for="(option, answerIndex) in currentQuestion.options"
-                    :key="answerIndex"
-                    @click="selectAnswer(answerIndex)"
-                    :disabled="timer === 0 || answerSelected"
-                    :class="{
-                    'selected': answerIndex === selectedAnswer,
-                    'disabled': timer === 0
-                    }"
-                    >
-                        {{ option }}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div v-else>
-            <p>Loading questions...</p>
-        </div>
+      <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10"></v-progress-linear>
 
-        <div v-if="isFinished">
-    <h3>Quiz Finished!</h3>
-    <router-link :to="{ name: 'UserDashboard', params: { results: results } }">Check your progress!</router-link>
-</div>
+      <v-card v-if="questions.length > 0" class="question mt-5">
+        <v-card-title>{{ currentQuestion.question }}</v-card-title>
+        <v-card-text>
+          <v-btn
+            v-for="(option, answerIndex) in currentQuestion.options"
+            :key="answerIndex"
+            @click="selectAnswer(answerIndex)"
+            :disabled="timer === 0 || answerSelected"
+            :class="{
+              'selected': answerIndex === selectedAnswer,
+              'disabled': timer === 0
+            }"
+            color="primary"
+            class="my-2 w-full"
+          >
+            {{ option }}
+          </v-btn>
+        </v-card-text>
+      </v-card>
 
-    </div>
-</template>
+      <v-card v-else>
+        <v-card-text>Loading questions...</v-card-text>
+      </v-card>
+
+      <v-card v-if="isFinished" class="mt-5">
+        <v-card-title>Quiz Finished!</v-card-title>
+        <v-card-text>
+          <router-link :to="{ name: 'UserDashboard', params: { results: results } }">
+            <v-btn color="success" dark>Check your progress!</v-btn>
+          </router-link>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </template>
 
 
 <script>
@@ -198,17 +211,20 @@ export default {
 
 
 <style>
-
-button {
-    width: 100%;
-    height: 50px;
-    background-color: rgb(64, 121, 139);
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px 0;
-    transition: background-color 0.3s;
+.selected {
+  background-color: #4caf50 !important;
+  color: white;
 }
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.w-full {
+  width: 100%;
+}
+
+
 
 </style>
