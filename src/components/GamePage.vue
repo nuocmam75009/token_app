@@ -1,6 +1,3 @@
-<!--
-THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
--->
 <template>
     <div class="game">
         <h2>You are now playing in {{ mode }} mode</h2>
