@@ -1,20 +1,27 @@
 <template>
     <v-container class="game">
+      <!-- Header Card for Mode -->
       <v-card class="mb-5" color="primary" dark>
-        <v-card-title>You are now playing in {{ mode }} mode</v-card-title>
+        <v-card-title class="text-wrap">You are now playing in {{ mode }} mode</v-card-title>
       </v-card>
 
-      <v-alert v-if="timer > 0" type="info" class="text-h6">
-        Time left: {{ timer }} seconds
-      </v-alert>
-      <v-alert v-else type="error" class="text-h6">
-        Time's up!
-      </v-alert>
+      <!-- Main Quiz Card -->
+      <v-card v-if="questions.length > 0" class="consistent-card">
+        <!-- Timer Alert -->
+        <v-alert v-if="timer > 0" type="info" class="text-h6 text-wrap">
+          Time left: {{ timer }} seconds
+        </v-alert>
+        <v-alert v-else type="error" class="text-h6 text-wrap">
+          Time's up!
+        </v-alert>
 
-      <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10"></v-progress-linear>
+        <!-- Progress Bar -->
+        <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10" class="mb-4"></v-progress-linear>
 
-      <v-card v-if="questions.length > 0" class="question mt-5">
-        <v-card-title>{{ currentQuestion.question }}</v-card-title>
+        <!-- Question Text -->
+        <v-card-title class="text-wrap">{{ currentQuestion.question }}</v-card-title>
+
+        <!-- Answer Options -->
         <v-card-text>
           <v-btn
             v-for="(option, answerIndex) in currentQuestion.options"
@@ -25,20 +32,23 @@
               'selected': answerIndex === selectedAnswer,
               'disabled': timer === 0
             }"
+            small
             color="primary"
-            class="my-2 w-full"
+            class="answer-button text-wrap"
           >
             {{ option }}
           </v-btn>
         </v-card-text>
       </v-card>
 
-      <v-card v-else>
-        <v-card-text>Loading questions...</v-card-text>
+      <!-- Loading State -->
+      <v-card v-else class="consistent-card">
+        <v-card-text class="text-wrap">Loading questions...</v-card-text>
       </v-card>
 
-      <v-card v-if="isFinished" class="mt-5">
-        <v-card-title>Quiz Finished!</v-card-title>
+      <!-- Finished Quiz Card -->
+      <v-card v-if="isFinished" class="mt-5 consistent-card">
+        <v-card-title class="text-wrap">Quiz Finished!</v-card-title>
         <v-card-text>
           <router-link :to="{ name: 'UserDashboard', params: { results: results } }">
             <v-btn color="success" dark>Check your progress!</v-btn>
@@ -210,11 +220,12 @@ export default {
 </script>
 
 
-<style>
-.selected {
+<style scoped>
+
+/* .selected {
   background-color: #4caf50 !important;
   color: white;
-}
+} */
 
 .disabled {
   opacity: 0.6;
@@ -225,6 +236,24 @@ export default {
   width: 100%;
 }
 
+.consistent-card {
+  max-width: 350px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+}
 
+.text-wrap {
+  white-space: normal;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+.answer-button {
+  width: 100%;
+  margin-bottom: 8px;
+}
 
 </style>
