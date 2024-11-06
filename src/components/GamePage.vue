@@ -54,7 +54,7 @@
 <script>
 
 import { ref, onMounted, computed } from 'vue';
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { arrayUnion, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 
@@ -72,6 +72,7 @@ export default {
         const results = ref([]);
         const answerSelected = ref(false); //track if answer is selected
         const selectedAnswer = ref(null); //track selected answer's idx
+        const correctAnswers = ref(0);
 
         const fetchQuestions = async () => {
             // Fetch questions from Firestore
@@ -82,7 +83,7 @@ export default {
                 const questionsSnapshot = await getDocs(collection(db, collectionName));
                 questions.value = questionsSnapshot.docs.map(doc =>
                 doc.data());
-                correctAnswer: doc.data().correctAnswer; /* eslint-disable-line */
+                // correctAnswer: doc.data().correctAnswer; /* eslint-disable-line */
 
             } catch (error) {
                 console.error('Error fetching questions:', error);
@@ -106,6 +107,11 @@ export default {
 
             answerSelected.value = true;
             selectedAnswer.value = optionIndex;
+
+            if (isCorrect) {
+                // Correct answer => increment correctAnswers
+                correctAnswers.value++;
+            }
 
             moveToNextQuestion();
         };
@@ -140,6 +146,7 @@ export default {
 
                 //Store results in Firestore
                 storeResultsInFirestore();
+                calculatePercentage();
             }
         };
 
@@ -178,6 +185,7 @@ export default {
                         const data = {
                             results: results.value,
                             timestamp: new Date(),
+                            mode: props.mode,
                         };
 
                         // Store results in Firestore
@@ -194,6 +202,39 @@ export default {
             }
         };
 
+        const calculatePercentage = async () => {
+            // Calculate the percentage of correct answers
+            const totalQuestions = questions.value.length;
+            const percentageCorrectAnswers = Math.round((correctAnswers.value / totalQuestions) * 100);
+
+            // Prepare the results object
+            const resultData = {
+                date: new Date().toISOString(),
+                percentageCorrectAnswers,
+                mode: props.mode,
+            };
+            results.value.push(resultData);
+            storePercentageInFirestore(resultData);
+        };
+
+        const storePercentageInFirestore = async (resultData) => {
+            try {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const userDoc = doc(db, 'users', user.uid);
+                        await updateDoc(userDoc, {
+                            quizResults: arrayUnion(resultData),
+                        });
+                        console.log('Percentage stored in Firestore:', resultData);
+                    } else {
+                        console.error('User not logged in');
+                    }
+                });
+            } catch (error) {
+                console.error('Error storing percentage in Firestore:', error);
+            }
+        };
+
         return {
             questions,
             currentQuestion,
@@ -205,6 +246,7 @@ export default {
             answerSelected,
             selectedAnswer,
             storeResultsInFirestore,
+            correctAnswers
         };
     }
 };
@@ -213,11 +255,6 @@ export default {
 
 
 <style scoped>
-
-/* .selected {
-  background-color: #4caf50 !important;
-  color: white;
-} */
 
 .disabled {
   opacity: 0.6;
