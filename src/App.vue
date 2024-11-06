@@ -8,13 +8,6 @@
       background="grey lighten-2"
       open-delay="200"
       >
-
-      <v-list>
-        <v-list-item>
-
-          </v-list-item>
-      </v-list>
-
       <v-list density="compact" nav>
         <v-list-item prepend-icon="mdi-home" to="/homepage">
           Homepage
@@ -22,8 +15,8 @@
         <v-list-item prepend-icon="mdi-account" to="/userdashboard">
           My Dashboard
         </v-list-item>
-        <v-list-item prepend-icon="mdi-book" to="/test">
-          Resources
+        <v-list-item prepend-icon="mdi-book" to="/resources">
+          My Notebook
         </v-list-item>
         <v-list-item prepend-icon="mdi-account-arrow-right" to="/">
           Sign out
@@ -50,7 +43,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
 .v-app {
   display: flex;
@@ -60,6 +53,7 @@ export default {
 
 .v-main {
   flex-grow: 1;
+  padding: 16px;
 }
 
 .content {
@@ -73,12 +67,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 10px;
 }
 
 .v-btn {
   font-weight: bold;
-  margin-left: 30px;
 }
 
 .nav-links {
@@ -93,5 +85,6 @@ export default {
 
 .v-footer {
   margin-bottom: 2px;
+  padding: 8px;
 }
 </style>

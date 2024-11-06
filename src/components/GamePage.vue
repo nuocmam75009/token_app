@@ -1,42 +1,62 @@
-<!--
-THIS IS THE PAGE WHERE THE GAME WILL BE PLAYED
--->
 <template>
-    <div class="game">
-        <h2>You are now playing in {{ mode }} mode</h2>
+    <v-container class="game">
+      <!-- Header Card for Mode -->
+      <v-card class="mb-5" color="primary" dark>
+        <v-card-title class="text-wrap">You are now playing in {{ mode }} mode</v-card-title>
+      </v-card>
 
-        <div v-if="timer > 0">Time left: {{ timer }} seconds</div>
-        <div v-else>Time's up!</div>
+      <!-- Main Quiz Card -->
+      <v-card v-if="questions.length > 0" class="consistent-card">
+        <!-- Timer Alert -->
+        <v-alert v-if="timer > 0" type="info" class="text-h6 text-wrap">
+          Time left: {{ timer }} seconds
+        </v-alert>
+        <v-alert v-else type="error" class="text-h6 text-wrap">
+          Time's up!
+        </v-alert>
 
-        <div v-if="questions.length > 0">
-            <div class="question">
-                <p>{{ currentQuestion.question }}</p>
-                <div class="options">
-                    <button v-for="(option, answerIndex) in currentQuestion.options"
-                    :key="answerIndex"
-                    @click="selectAnswer(answerIndex)"
-                    :disabled="timer === 0 || answerSelected"
-                    :class="{
-                    'selected': answerIndex === selectedAnswer,
-                    'disabled': timer === 0
-                    }"
-                    >
-                        {{ option }}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div v-else>
-            <p>Loading questions...</p>
-        </div>
+        <!-- Progress Bar -->
+        <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10" class="mb-4"></v-progress-linear>
 
-        <div v-if="isFinished">
-    <h3>Quiz Finished!</h3>
-    <router-link :to="{ name: 'UserDashboard', params: { results: results } }">Check your progress!</router-link>
-</div>
+        <!-- Question Text -->
+        <v-card-title class="text-wrap">{{ currentQuestion.question }}</v-card-title>
 
-    </div>
-</template>
+        <!-- Answer Options -->
+        <v-card-text>
+          <v-btn
+            v-for="(option, answerIndex) in currentQuestion.options"
+            :key="answerIndex"
+            @click="selectAnswer(answerIndex)"
+            :disabled="timer === 0 || answerSelected"
+            :class="{
+              'selected': answerIndex === selectedAnswer,
+              'disabled': timer === 0
+            }"
+            small
+            color="primary"
+            class="answer-button text-wrap"
+          >
+            {{ option }}
+          </v-btn>
+        </v-card-text>
+      </v-card>
+
+      <!-- Loading State -->
+      <v-card v-else class="consistent-card">
+        <v-card-text class="text-wrap">Loading questions...</v-card-text>
+      </v-card>
+
+      <!-- Finished Quiz Card -->
+      <v-card v-if="isFinished" class="mt-5 consistent-card">
+        <v-card-title class="text-wrap">Quiz Finished!</v-card-title>
+        <v-card-text>
+          <router-link :to="{ name: 'UserDashboard', params: { results: results } }">
+            <v-btn color="success" dark>Check your progress!</v-btn>
+          </router-link>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </template>
 
 
 <script>
@@ -200,18 +220,40 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 
-button {
-    width: 100%;
-    height: 50px;
-    background-color: rgb(64, 121, 139);
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px 0;
-    transition: background-color 0.3s;
+/* .selected {
+  background-color: #4caf50 !important;
+  color: white;
+} */
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.consistent-card {
+  max-width: 350px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.text-wrap {
+  white-space: normal;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+.answer-button {
+  width: 100%;
+  margin-bottom: 8px;
 }
 
 </style>
