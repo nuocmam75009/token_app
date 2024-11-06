@@ -1,62 +1,54 @@
 <template>
     <v-container class="game">
-      <!-- Header Card for Mode -->
-      <v-card class="mb-5" color="primary" dark>
-        <v-card-title class="text-wrap">You are now playing in {{ mode }} mode</v-card-title>
-      </v-card>
+        <v-card class="mb-5" color="primary" dark>
+            <v-card-title class="text-wrap">You are now playing in {{ mode }} mode</v-card-title>
+        </v-card>
 
-      <!-- Main Quiz Card -->
-      <v-card v-if="questions.length > 0" class="consistent-card">
-        <!-- Timer Alert -->
-        <v-alert v-if="timer > 0" type="info" class="text-h6 text-wrap">
-          Time left: {{ timer }} seconds
-        </v-alert>
-        <v-alert v-else type="error" class="text-h6 text-wrap">
-          Time's up!
-        </v-alert>
+        <v-card v-if="questions.length > 0" class="consistent-card">
+            <v-alert v-if="timer > 0" type="info" class="text-h6 text-wrap">
+                Time left: {{ timer }} seconds
+            </v-alert>
+            <v-alert v-else type="error" class="text-h6 text-wrap">
+                Time's up!
+            </v-alert>
 
-        <!-- Progress Bar -->
-        <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10" class="mb-4"></v-progress-linear>
+            <v-progress-linear :value="((timer / 15) * 100)" color="blue" height="10" class="mb-4"></v-progress-linear>
 
-        <!-- Question Text -->
-        <v-card-title class="text-wrap">{{ currentQuestion.question }}</v-card-title>
+            <v-card-title class="text-wrap">{{ currentQuestion.question }}</v-card-title>
 
-        <!-- Answer Options -->
-        <v-card-text>
-          <v-btn
-            v-for="(option, answerIndex) in currentQuestion.options"
-            :key="answerIndex"
-            @click="selectAnswer(answerIndex)"
-            :disabled="timer === 0 || answerSelected"
-            :class="{
-              'selected': answerIndex === selectedAnswer,
-              'disabled': timer === 0
-            }"
-            small
-            color="primary"
-            class="answer-button text-wrap"
-          >
-            {{ option }}
-          </v-btn>
-        </v-card-text>
-      </v-card>
+            <v-card-text>
+                <v-btn
+                    v-for="(option, answerIndex) in currentQuestion.options"
+                    :key="answerIndex"
+                    @click="selectAnswer(answerIndex)"
+                    :disabled="timer === 0 || answerSelected"
+                    :class="{
+                        'selected': answerIndex === selectedAnswer,
+                        'disabled': timer === 0
+                    }"
+                    small
+                    color="primary"
+                    class="answer-button text-wrap"
+                >
+                    {{ option }}
+                </v-btn>
+            </v-card-text>
+        </v-card>
 
-      <!-- Loading State -->
-      <v-card v-else class="consistent-card">
-        <v-card-text class="text-wrap">Loading questions...</v-card-text>
-      </v-card>
+        <v-card v-else class="consistent-card">
+            <v-card-text class="text-wrap">Loading questions...</v-card-text>
+        </v-card>
 
-      <!-- Finished Quiz Card -->
-      <v-card v-if="isFinished" class="mt-5 consistent-card">
-        <v-card-title class="text-wrap">Quiz Finished!</v-card-title>
-        <v-card-text>
-          <router-link :to="{ name: 'UserDashboard', params: { results: results } }">
-            <v-btn color="success" dark>Check your progress!</v-btn>
-          </router-link>
-        </v-card-text>
-      </v-card>
+        <v-card v-if="isFinished" class="mt-5 consistent-card">
+            <v-card-title class="text-wrap">Quiz Finished!</v-card-title>
+            <v-card-text>
+                <router-link :to="{ name: 'UserDashboard', params: { results: results } }">
+                    <v-btn color="success" dark>Check your progress!</v-btn>
+                </router-link>
+            </v-card-text>
+        </v-card>
     </v-container>
-  </template>
+</template>
 
 
 <script>
