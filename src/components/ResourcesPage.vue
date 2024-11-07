@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <v-col>
+            <v-col cols="12" sm="8" md="6">
                 <v-slide-group
                     v-model="selectedCard"
                     show-arrows
@@ -21,12 +21,15 @@
                             class="mx-4 my-2"
                             max-width="344"
                             height="auto"
+                            @mouseover="cardHover = true"
+                            @mouseleave="cardHover = false"
+                            :style="{ boxShadow: '0 10 20px rgba(66, 185, 131, 0.4)' }"
                         >
                             <v-card-text>
-                                <h4 class="text-h5 font-weight-black">
+                                <h4 class="text-h5 font-weight-black mb-2">
                                     {{ lesson.title }}
                                 </h4>
-                                <div class="text-medium-emphasis">
+                                <div class="text-medium-emphasis mb-3">
                                     {{ lesson.content }}
                                 </div>
                             </v-card-text>
@@ -40,35 +43,35 @@
                                 </v-btn>
                             </v-card-actions>
 
-                            <v-expand-transition>
+                            <v-fade-transition>
                                 <v-card
                                     v-if="revealedCards.has(lesson.id)"
                                     class="v-card--reveal"
                                     height="100%"
                                 >
                                     <v-card-text class="pb-0">
-                                        <p class="text-h5">Questions you should be able to answer</p>
-                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                        <p class="text-h5 font-weight-bold">Questions you should be able to answer</p>
+                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
                                             {{ lesson.extra[0] }}
                                         </p>
-                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
                                             {{ lesson.extra[1] }}
                                         </p>
-                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
                                             {{ lesson.extra[2] }}
                                         </p>
                                     </v-card-text>
                                     <v-card-actions class="pt-0">
                                         <v-btn
                                             color="teal-accent-4"
-                                            variant="text"
+                                            variant="outlined"
                                             @click="toggleReveal(lesson.id)"
                                         >
                                             Close
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
-                            </v-expand-transition>
+                            </v-fade-transition>
                         </v-card>
                     </v-slide-item>
                 </v-slide-group>
@@ -89,6 +92,7 @@ export default {
             lessons: [],
             loading: false,
             error: null,
+            cardHover: false,
             focusedCardIndex: -1,
             selectedCard: null,
             revealedCards: new Set(),
@@ -196,5 +200,20 @@ export default {
 .lesson-card.focused {
     border-color: #42b983;
     box-shadow: 0 0 8px rgba(66, 185, 131, 0.4);
+}
+
+.v-card--reveal {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: rotateY(0deg);
+}
+
+.v-card--reveal-enter-active,
+.v-card--reveal-leave-active {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.v-card--reveal-enter, .v-card--reveal-leave-to {
+  opacity: 0;
+  transform: rotateY(90deg);
 }
 </style>
