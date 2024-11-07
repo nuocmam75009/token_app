@@ -148,7 +148,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .resources-page {
     padding: 1rem;
 }
@@ -156,17 +156,18 @@ export default {
 .lesson-container {
     display: grid;
     gap: 1rem;
+    padding: 0 1rem;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) ;
 }
 
 .lesson-cards {
   display: flex;
-  overflow-x: scroll;
-  flex-direction: row;
+  overflow-x: hidden;
+/*   flex-direction: row;
   scroll-snap-type: mandatory;
   scroll-snap-align: start;
     flex: 0 0 auto;
-    margin: 0 10px;
+    margin: 0 10px; */
 }
 
 .loading, .error {
@@ -181,16 +182,15 @@ export default {
 .lesson-card {
     width: 300px;
     padding: 1rem;
-    border: 1px solid #ddd;
     border-radius: 4px;
     margin: 0 10px;
-    scroll-snap-align: start;
+
 }
 
 .v-container {
     display: flex;
     justify-content: center;
-    overflow-x: auto;
+    max-width: 100%;
 }
 
 .error {
