@@ -20,7 +20,7 @@
                           <v-col cols="12">
                           <p><strong>First Name:</strong> {{ firstName }}</p>
                           <p><strong>Last Name:</strong> {{ lastName }}</p>
-                          <p><strong>Email:</strong> {{ emailAdress }}</p>
+                          <p><strong>Email:</strong> {{ emailAddress }}</p>
                           </v-col>
                           <v-btn
                           color="blue"
@@ -51,9 +51,11 @@
           </v-card-title>
 
           <v-card-text>
-              <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
-              <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
-              <p><strong>debug </strong> {{ this.results }}</p>
+              <p><strong>Mode: </strong> {{  }} </p>
+              <p>Details: {{ results[2] }}</p>
+              <p><strong>Date: </strong> {{  }} </p>
+              <p><strong>Score:</strong> {{  }}%</p>
+              <p><strong>DEBUG (show all results):  </strong> {{  }}</p>
               <v-btn
               color="blue"
               prepend-icon="mdi-information"
@@ -67,7 +69,7 @@
        <!-- Edit Information Modal -->
 
       <v-dialog v-model="editDialog">
-          <v-card prepent-icon="mdi-account" title="Edit My Information">
+          <v-card prepend-icon="mdi-account" title="Edit My Information">
               <v-card-text>
                   <v-row dense>
                       <v-col cols="12" md="4" sm="6">
@@ -111,29 +113,14 @@
               </v-card-text>
           </v-card>
       </v-dialog>
-
   <!-- Quiz Details Modal -->
       <v-dialog v-model="detailsDialog" max-width="800px">
           <v-card>
-          <v-card-title>Quiz Details</v-card-title>
+          <v-card-title>Progression</v-card-title>
           <v-card-text>
-              <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
-              <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
-              <p>More details about the quiz can be shown here...</p>
-
-              <div v-if="results.length > 0">
-                  <ul>
-                      <li v-for="(result, index) in results" :key="index">
-                          <strong>Question:</strong> {{ result.question }} <br>
-                          <strong>Your Answer:</strong> {{ result.selectedAnswer }} <br>
-                          <strong>Result:</strong> <span :class="{'correct': result.isCorrect, 'incorrect': !result.isCorrect}">
-                              {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
-                          </span>
-                      </li>
-                  </ul>
-              </div>
-
-
+              <p><strong>Quiz Title:</strong> {{  }}</p>
+              <p><strong>Score:</strong> {{  }}%</p>
+              <p>INSERT GRAPH OF VALID ANSWERS % EVOLUTION</p>
           </v-card-text>
           <v-card-actions>
               <v-btn color="blue" @click="detailsDialog = false">Close</v-btn>
@@ -142,15 +129,13 @@
       </v-dialog>
     </v-row>
   </v-container>
-
-
 </template>
 
 <script>
-
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db, auth } from '../../config/firebase';
 import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+
 
 export default {
   name: 'UserDashboard',
@@ -162,13 +147,14 @@ export default {
           results: [],
           firstName: '',
           lastName: '',
-          emailAdress: '',
+          emailAddress: '',
           loading: true,
           editedProfile: {
               firstName: '',
               lastName: '',
               email: '',
           },
+          latestQuiz: {},
       };
   },
       async created() {
@@ -181,16 +167,21 @@ export default {
                   const userData = userSnap.data();
                   this.firstName = userData.firstName;
                   this.lastName = userData.lastName;
-                  this.emailAdress = userData.email;
+                  this.emailAddress = userData.email;
+                  this.editedProfile = {
+                      firstName: this.firstName,
+                      lastName: this.lastName,
+                      email: this.emailAddress,
+                  };
                   this.results = userData.results || [];
 
-                  // Init with edited info
+                  const quizResultsRef = collection(db, 'quizResults');
+                  const q = query(quizResultsRef, orderBy('date', 'mode', 'desc'), limit(1));
+                  const querySnapshot = await getDocs(q);
+                  querySnapshot.forEach((doc) => {
+                      this.latestQuiz = doc.data();
+                  });
 
-                  this.editedProfile = {
-                      firstName:this.firstName,
-                      lastName: this.lastName,
-                      email: this.emailAdress,
-                  };
                   } else {
                       console.log('No such user found in Firestore');
                   }
@@ -199,7 +190,6 @@ export default {
               }
           });
       },
-
   methods: {
       async saveProfile() {
         try {
@@ -215,19 +205,20 @@ export default {
           // Update the local data
           this.firstName = this.editedProfile.firstName;
           this.lastName = this.editedProfile.lastName;
-          this.emailAdress = this.editedProfile.email;
-
+          this.emailAddress = this.editedProfile.email;
           // Close dialog
           this.editDialog = false;
           }
         }  catch (error) {
           console.error('Error updating user info:', error);
       }
-      }
+      },
+      formatDate(date) {
+      if (date && date.toDate) return date.toDate().toLocaleString();
+      return 'N/A';
+      },
   },
-
 };
-
 export const createUser = async (
   email,
   password,
@@ -251,22 +242,7 @@ export const createUser = async (
       console.error('Error creating user:', error);
   }
 };
-
-
-/* const updateUser = async (uid, updatedData) => {
-const userRef = doc(db, 'users', uid);
-
-try {
-  await updateDoc(userRef, updatedData);
-  console.log('User information updated successfully');
-} catch (error) {
-  console.error('Error updating user info:', error);
-}
-};
-
-*/
 </script>
 
 <style>
-
 </style>
