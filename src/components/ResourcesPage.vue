@@ -1,10 +1,9 @@
 <template>
-
     <v-container>
         <v-row
         justify="center"
         >
-            <v-col cols="12">
+            <v-col >
                 <v-slide-group
                     v-model="selectedCard"
                     show-arrows
@@ -20,16 +19,17 @@
 
                     <!-- Card layout -->
 
-                        <v-card :elevation="index === selectedCard ? 12 : 2" id="lesson-card" class="mx-4" max-width="344">
-
+                        <v-card
+                        :elevation="index === selectedCard ? 12 : 2"
+                        id="lesson-card"
+                        class="mx-4 my-2"
+                        max-width="344"
+                        height: auto
+                        >
                             <v-card-text>
-                                <div>
-                                    Lesson
-                                </div>
-                                <p class="text-h4 font-weight-black">
+                                <h4 class="text-h5 font-weight-black">
                                     {{ lesson.title }}
-                                </p>
-
+                                </h4>
                                 <div class="text-medium-emphasis">
                                     {{ lesson.content }}
                                 </div>
@@ -39,11 +39,12 @@
 
                             <v-card-actions>
                                 <v-btn
+
                                 @click="toggleReveal(lesson.id)"
                                 color="teal-accent-4"
                                 variant="text"
                                 >
-                                    Learn more :)
+                                    Click here!
                                 </v-btn>
                             </v-card-actions>
 
@@ -52,12 +53,18 @@
                   v-if="revealedCards.has(lesson.id)"
                   class="v-card--reveal"
                   height="100%"
-                  style="height: 100%; position: absolute; bottom: 0; left: 0; right: 0; background-color: white;"
+
                 >
                   <v-card-text class="pb-0">
-                    <p class="text-h4">Additional Details</p>
-                    <p class="text-medium-emphasis">
-                      {{ lesson.details }}
+                    <p class="text-h5">Questions you should be able to answer</p>
+                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                      {{ lesson?.extra[0] }}
+                    </p>
+                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                      {{ lesson?.extra[1] }}
+                    </p>
+                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                      {{ lesson?.extra[2] }}
                     </p>
                   </v-card-text>
 

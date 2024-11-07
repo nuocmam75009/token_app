@@ -53,7 +53,7 @@
           <v-card-text>
               <p><strong>Quiz Title:</strong> {{ results[0]?.quizTitle }}</p>
               <p><strong>Score:</strong> {{ results[0]?.score }}%</p>
-              <p><strong>debug </strong> {{ this.results }}</p>
+              <p><strong>debug </strong> {{ results }}</p>
               <v-btn
               color="blue"
               prepend-icon="mdi-information"
@@ -142,8 +142,6 @@
       </v-dialog>
     </v-row>
   </v-container>
-
-
 </template>
 
 <script>
@@ -216,7 +214,6 @@ export default {
           this.firstName = this.editedProfile.firstName;
           this.lastName = this.editedProfile.lastName;
           this.emailAdress = this.editedProfile.email;
-
           // Close dialog
           this.editDialog = false;
           }
