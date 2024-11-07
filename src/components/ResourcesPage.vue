@@ -1,9 +1,7 @@
 <template>
     <v-container>
-        <v-row
-        justify="center"
-        >
-            <v-col >
+        <v-row justify="center">
+            <v-col>
                 <v-slide-group
                     v-model="selectedCard"
                     show-arrows
@@ -12,19 +10,17 @@
                     center-active
                     @change="updateFocusCard"
                 >
-                <v-slide-item
-                    v-for="(lesson, index) in lessons"
-                    :key="lesson.id"
+                    <v-slide-item
+                        v-for="(lesson, index) in lessons"
+                        :key="lesson.id"
                     >
-
-                    <!-- Card layout -->
-
+                        <!-- Card layout -->
                         <v-card
-                        :elevation="index === selectedCard ? 12 : 2"
-                        id="lesson-card"
-                        class="mx-4 my-2"
-                        max-width="344"
-                        height: auto
+                            :elevation="index === selectedCard ? 12 : 2"
+                            id="lesson-card"
+                            class="mx-4 my-2"
+                            max-width="344"
+                            height="auto"
                         >
                             <v-card-text>
                                 <h4 class="text-h5 font-weight-black">
@@ -34,58 +30,51 @@
                                     {{ lesson.content }}
                                 </div>
                             </v-card-text>
-
-
-
                             <v-card-actions>
                                 <v-btn
-
-                                @click="toggleReveal(lesson.id)"
-                                color="teal-accent-4"
-                                variant="text"
+                                    @click="toggleReveal(lesson.id)"
+                                    color="teal-accent-4"
+                                    variant="text"
                                 >
                                     Click here!
                                 </v-btn>
                             </v-card-actions>
 
                             <v-expand-transition>
-                <v-card
-                  v-if="revealedCards.has(lesson.id)"
-                  class="v-card--reveal"
-                  height="100%"
-
-                >
-                  <v-card-text class="pb-0">
-                    <p class="text-h5">Questions you should be able to answer</p>
-                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
-                      {{ lesson?.extra[0] }}
-                    </p>
-                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
-                      {{ lesson?.extra[1] }}
-                    </p>
-                    <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
-                      {{ lesson?.extra[2] }}
-                    </p>
-                  </v-card-text>
-
-                  <v-card-actions class="pt-0">
-                    <v-btn
-                      color="teal-accent-4"
-                      variant="text"
-                      @click="toggleReveal(lesson.id)"
-                    >
-                    Close
-                </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-expand-transition>
+                                <v-card
+                                    v-if="revealedCards.has(lesson.id)"
+                                    class="v-card--reveal"
+                                    height="100%"
+                                >
+                                    <v-card-text class="pb-0">
+                                        <p class="text-h5">Questions you should be able to answer</p>
+                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                            {{ lesson.extra[0] }}
+                                        </p>
+                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                            {{ lesson.extra[1] }}
+                                        </p>
+                                        <p class="text-medium-emphasis" v-if="lesson?.extra && lesson?.extra.length > 0">
+                                            {{ lesson.extra[2] }}
+                                        </p>
+                                    </v-card-text>
+                                    <v-card-actions class="pt-0">
+                                        <v-btn
+                                            color="teal-accent-4"
+                                            variant="text"
+                                            @click="toggleReveal(lesson.id)"
+                                        >
+                                            Close
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-expand-transition>
                         </v-card>
                     </v-slide-item>
                 </v-slide-group>
             </v-col>
         </v-row>
     </v-container>
-
 </template>
 
 <script>
