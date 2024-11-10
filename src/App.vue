@@ -1,6 +1,7 @@
 <template>
 
 <v-app>
+
       <v-navigation-drawer
       app
       expand-on-hover
@@ -39,6 +40,12 @@
 
 export default {
   name: 'App',
+  data() {
+    return {
+      drawer: false,
+    }
+  }
+
 };
 
 </script>
@@ -67,6 +74,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.v-navigation-drawer {
+  position: fixed;
 }
 
 .v-btn {

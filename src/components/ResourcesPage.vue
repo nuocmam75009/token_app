@@ -18,17 +18,15 @@
                         <v-card
                             :elevation="index === selectedCard ? 12 : 2"
                             id="lesson-card"
-                            class="mx-4 my-2"
+                            class="lesson-card mx-4 my-2"
                             max-width="344"
-                            height="auto"
+                            height="586px"
                             @mouseover="cardHover = true"
                             @mouseleave="cardHover = false"
-                            :style="{ boxShadow: '0 10 20px rgba(66, 185, 131, 0.4)' }"
+                            :style="cardHover ? { boxShadow: '0 15px 30px rgba(66, 185, 131, 0.5)' } : {}"
                         >
                             <v-card-text>
-                                <h4 class="text-h5 font-weight-black mb-2">
-                                    {{ lesson.title }}
-                                </h4>
+                                <h4 class="text-h5 font-weight-bold mb-2">{{ lesson.title }}</h4>
                                 <div class="text-medium-emphasis mb-3">
                                     {{ lesson.content }}
                                 </div>
@@ -42,7 +40,7 @@
                                     Click here!
                                 </v-btn>
                             </v-card-actions>
-
+                            <!-- Revealed content -->
                             <v-fade-transition>
                                 <v-card
                                     v-if="revealedCards.has(lesson.id)"
@@ -51,14 +49,8 @@
                                 >
                                     <v-card-text class="pb-0">
                                         <p class="text-h5 font-weight-bold">Questions you should be able to answer</p>
-                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
-                                            {{ lesson.extra[0] }}
-                                        </p>
-                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
-                                            {{ lesson.extra[1] }}
-                                        </p>
-                                        <p class="text-medium-emphasis text-body-1" v-if="lesson?.extra && lesson?.extra.length > 0">
-                                            {{ lesson.extra[2] }}
+                                        <p v-for="(extra, i) in (lesson.extra || [])" :key="i" class="text-medium-emphasis text-body-1">
+                                            {{ extra }}
                                         </p>
                                     </v-card-text>
                                     <v-card-actions class="pt-0">
@@ -77,13 +69,24 @@
                 </v-slide-group>
             </v-col>
         </v-row>
+        <!-- Infinite Scroll -->
+        <v-infinite-scroll
+            @load="fetchLessons"
+            :disabled="loading || !hasMoreLessons"
+        >
+            <v-progress-circular
+                v-if="loading"
+                indeterminate
+                color="teal"
+            ></v-progress-circular>
+        </v-infinite-scroll>
     </v-container>
 </template>
 
-<script>
 
+<script>
 import { db } from '../../config/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, limit, orderBy, startAfter } from 'firebase/firestore';
 
 export default {
     name: 'ResourcesPage',
@@ -96,57 +99,73 @@ export default {
             focusedCardIndex: -1,
             selectedCard: null,
             revealedCards: new Set(),
+            lastVisible: null,
+            hasMoreLessons: true,
         };
     },
 
     mounted() {
-        this.fetchLessons();
+        this.fetchLessons(); // Initial load of lessons
     },
 
     methods: {
         async fetchLessons() {
+            if (this.loading || !this.hasMoreLessons) return;
+
             this.loading = true;
             this.error = null;
 
-        try {
-            const querySnapshot = await getDocs(collection(db, 'lessons'));
-            this.lessons = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                details: doc.data().details || 'No additional details available', // Ensure details has a default value
-            }));
-        } catch (error) {
-            console.error('Error fetching lessons:', error);
-            this.error = error.message;
-        } finally {
-            this.loading = false;
-        }
+            try {
+                // Define the query to fetch lessons with pagination
+                const lessonsRef = collection(db, 'lessons');
+                let lessonsQuery = query(lessonsRef, orderBy('title'), limit(10));
 
-    },
+                // Start after the last visible document if available
+                if (this.lastVisible) {
+                    lessonsQuery = query(lessonsRef, orderBy('title'), startAfter(this.lastVisible), limit(10));
+                }
+
+                const querySnapshot = await getDocs(lessonsQuery);
+
+                if (!querySnapshot.empty) {
+                    // Update lessons and set the last visible document
+                    const newLessons = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                        details: doc.data().details || 'No additional details available',
+                    }));
+
+                    this.lessons = this.lessons.concat(newLessons);
+                    this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1]; // Track last document
+                } else {
+                    this.hasMoreLessons = false; // No more lessons to load
+                }
+            } catch (error) {
+                console.error('Error fetching lessons:', error);
+                this.error = error.message;
+            } finally {
+                this.loading = false;
+            }
+        },
 
         toggleReveal(id) {
             if (!id) return;
 
-            // using set to keep track of revealed cards
             if (this.revealedCards.has(id)) {
                 this.revealedCards.delete(id);
             } else {
                 this.revealedCards.add(id);
             }
         },
-        isRevealed(id) {
-            return id && this.revealedCards.has(id);
-        },
+
         updateFocusCard(index) {
-            // Ensures that the index is within the bounds of the lessons array
             if (index < 0 || index >= this.lessons.length) return;
-                this.focusedCard.index = index;
-    }
-}
-}
-
-
+            this.focusedCardIndex = index;
+        }
+    },
+};
 </script>
+
 
 <style scoped>
 .resources-page {
@@ -160,14 +179,15 @@ export default {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) ;
 }
 
+
 .lesson-cards {
   display: flex;
+  cursor: pointer;
   overflow-x: hidden;
-/*   flex-direction: row;
-  scroll-snap-type: mandatory;
-  scroll-snap-align: start;
-    flex: 0 0 auto;
-    margin: 0 10px; */
+}
+.lesson-cards:hover {
+    overflow-x: auto;
+    background: fixed;
 }
 
 .loading, .error {
