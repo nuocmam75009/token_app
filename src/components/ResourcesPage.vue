@@ -1,23 +1,28 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <v-col cols="12" sm="10" md="8" lg="6">
-                <!-- Main Card Container -->
+            <v-col cols="8" sm="6" md="5" lg="6">
                 <v-card elevation="3" class="pa-4">
-                    <!-- Search Bar -->
                     <v-row justify="center">
-                        <v-col cols="12">
+                        <v-col cols="10" sm="6" md="5">
                             <v-text-field
                                 v-model="searchQuery"
-                                label="Search lessons by keyword"
+                                label="Search by keyword"
                                 append-icon="mdi-magnify"
                                 clearable
                                 class="mb-4"
-                            ></v-text-field>
+                            >
+                        </v-text-field>
+                        </v-col>
+                        <v-col cols="2" class="d-flex justify-center">
+                            <v-btn
+                                :color="showSavedOnly ? 'primary' : 'grey'"
+                                @click="toggleShowSavedOnly"
+                            >
+                                Saved Lessons
+                            </v-btn>
                         </v-col>
                     </v-row>
-
-                    <!-- Lessons Slide Group -->
                     <v-slide-group
                         v-model="selectedCard"
                         show-arrows
@@ -29,7 +34,6 @@
                             v-for="(lesson, index) in filteredLessons"
                             :key="lesson.id"
                         >
-                            <!-- Card Layout for Each Lesson -->
                             <v-card
                                 :elevation="index === selectedCard ? 10 : 2"
                                 class="lesson-card mx-2 my-4"
@@ -45,19 +49,24 @@
                                         {{ lesson.content }}
                                     </div>
                                 </v-card-text>
-
-                                <!-- Card Actions -->
-                                <v-card-actions class="d-flex justify-center">
+                                <v-card-actions class="d-flex justify-center small-btn-container">
                                     <v-btn
                                         @click="toggleReveal(lesson.id)"
                                         color="primary"
                                         variant="text"
+                                        class="small-btn"
                                     >
                                         Details
                                     </v-btn>
+                                    <v-btn
+                                        :color="savedLessons.includes(lesson.id) ? 'red' : 'green'"
+                                        @click="toggleSaveLesson(lesson.id)"
+                                        variant="text"
+                                        class="small-btn"
+                                    >
+                                        {{ savedLessons.includes(lesson.id) ? 'Unsave' : 'Save' }}
+                                    </v-btn>
                                 </v-card-actions>
-
-                                <!-- Revealed Extra Content -->
                                 <v-fade-transition>
                                     <v-card
                                         v-if="revealedCards.has(lesson.id)"
@@ -87,15 +96,6 @@
                             </v-card>
                         </v-slide-item>
                     </v-slide-group>
-
-                    <!-- Infinite Scroll Loading Indicator -->
-<!--                     <v-row justify="center" class="mt-4">
-                        <v-col cols="auto">
-                            <v-infinite-scroll @load="fetchLessons" :disabled="loading || !hasMoreLessons">
-                                <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
-                            </v-infinite-scroll>
-                        </v-col>
-                    </v-row> -->
                 </v-card>
             </v-col>
         </v-row>
@@ -119,27 +119,38 @@ export default {
             revealedCards: new Set(),
             lastVisible: null,
             hasMoreLessons: true,
-            searchQuery: '', // New data property for search input
+            searchQuery: '',
+            savedLessons: [],
+            showSavedOnly: false,
         };
     },
 
     computed: {
-        // Computed property to filter lessons based on the search query
+        // filter lessons based on the search query and saved lessons
         filteredLessons() {
-            if (!this.searchQuery) {
-                return this.lessons;
+            let filtered = this.lessons;
+
+            // keyword search filter
+            if (this.searchQuery) {
+                const query = this.searchQuery.toLowerCase();
+                filtered = filtered.filter(
+                    (lesson) =>
+                        lesson.title.toLowerCase().includes(query) ||
+                        lesson.content.toLowerCase().includes(query)
+                );
             }
-            const query = this.searchQuery.toLowerCase();
-            return this.lessons.filter(
-                (lesson) =>
-                    lesson.title.toLowerCase().includes(query) ||
-                    lesson.content.toLowerCase().includes(query)
-            );
+
+            // Apply saved lessons filter
+            if (this.showSavedOnly) {
+                filtered = filtered.filter(lesson => this.savedLessons.includes(lesson.id));
+            }
+
+            return filtered;
         },
     },
 
     mounted() {
-        this.fetchLessons(); // Initial load of lessons
+        this.fetchLessons();
     },
 
     methods: {
@@ -195,6 +206,18 @@ export default {
         updateFocusCard(index) {
             if (index < 0 || index >= this.lessons.length) return;
             this.focusedCardIndex = index;
+        },
+
+        toggleSaveLesson(id) {
+            if (this.savedLessons.includes(id)) {
+                this.savedLessons = this.savedLessons.filter(lessonId => lessonId !== id);
+            } else {
+                this.savedLessons.push(id);
+            }
+        },
+
+        toggleShowSavedOnly() {
+            this.showSavedOnly = !this.showSavedOnly;
         }
     },
 };
@@ -202,61 +225,59 @@ export default {
 
 
 <style scoped>
-/* Main container styling */
 .resources-page {
     padding: 1rem;
     display: flex;
     justify-content: center;
+    width: auto;
 }
 
-/* Lesson container styling */
+
 .lesson-container {
-    display: grid;
-    gap: 1rem;
+    display: flex;
+    justify-content: center;
     padding: 0 1rem;
-    max-width: 800px; /* Narrower width for the main container */
+    max-width: 1200px;
     margin: auto;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-/* Lesson cards styling */
+
 .lesson-cards {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+    gap: 16px;
+    padding: 16px;
     overflow-x: auto;
     scroll-behavior: smooth;
+    min-height: 400px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .lesson-cards:hover {
     background-attachment: fixed;
 }
 
-/* Loading and error message styling */
 .loading,
 .error {
     text-align: center;
     padding: 2rem;
 }
 
-.error {
-    color: red;
-}
-
-/* Main card styling */
-.main-card {
-    opacity: 1;
-}
-
-/* Individual lesson card styling */
 .lesson-card {
-    width: 280px;
-    padding: 1rem;
+    max-width: 300px;
+    width: 100%;
+    padding: 16px;
     border-radius: 8px;
-    margin: 0 8px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .lesson-card:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transform: translateY(-30px);
 }
 
@@ -265,17 +286,18 @@ export default {
     box-shadow: 0 0 10px rgba(66, 185, 131, 0.5);
 }
 
-/* Styling for the revealed card */
+
 .v-card--reveal {
-    transition: transform 4s ease, opacity 0.3s ease;
-    transform: rotateY(0deg);
     background-color: #f9f9f9;
-    padding: 1rem;
+    padding: 16px;
+    transform-origin: center;
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .v-card--reveal-enter-active,
 .v-card--reveal-leave-active {
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: rotateY('angle')
 }
 
 .v-card--reveal-enter,
@@ -284,11 +306,33 @@ export default {
     transform: rotateY(90deg);
 }
 
-/* Container alignment and max-width */
+
 .v-container {
     display: flex;
     justify-content: center;
-    width: 800px; /* Narrower overall container width */
+    width: 800px;
     margin: auto;
 }
+.small-btn {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.small-btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.navigation-arrow {
+    font-size: 24px;
+    opacity: 0.6;
+}
+
+.lesson-cards:only-child .navigation-arrow {
+    display: none; /* Hide arrows if there's only one card */
+}
+
+
+
 </style>
