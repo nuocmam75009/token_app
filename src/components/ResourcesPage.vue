@@ -53,12 +53,13 @@
                                         {{ lesson.content }}
                                     </div>
                                 </v-card-text>
-                                <v-card-actions>
+                                <v-card-actions class="button-container d-flex flex-column">
                                     <v-btn
                                         @click="toggleReveal(lesson.id)"
                                         color="primary"
                                         dense
                                         variant="text"
+                                        class="small-btn"
                                     >
                                         Details
                                     </v-btn>
@@ -66,7 +67,7 @@
                                         :color="savedLessons.includes(lesson.id) ? 'red' : 'green'"
                                         @click="toggleSaveLesson(lesson.id)"
                                         variant="text"
-                                        class="small-btn"
+                                        class="small-btn mt-1"
                                     >
                                         {{ savedLessons.includes(lesson.id) ? 'Unsave' : 'Save' }}
                                     </v-btn>
