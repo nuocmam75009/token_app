@@ -1,20 +1,28 @@
 <template>
-<div class="home-container">
-    <h1>Choose your difficulty level</h1>
-
-    <div class="button-container">
-      <router-link :to="{ name : 'Easymode', params: { mode: 'easy' } }">
-        <button>Easy</button>
-      </router-link>
-      <router-link :to="{ name : 'IntermediateMode', params: { mode: 'intermediate' } }">
-        <button>Intermediate</button>
-      </router-link>
-      <router-link :to="{ name : 'HardMode', params: { mode: 'hard' } }">
-        <button>Hard</button>
-      </router-link>
-  </div>
-</div>
-
+  <v-container class="home-container" fluid>
+    <v-row justify="center">
+      <v-col cols="12" class="text-center">
+        <h1>Choose your difficulty level</h1>
+      </v-col>
+    </v-row>
+    <v-row justify="center" class="button-container">
+      <v-col cols="12" sm="4" class="text-center">
+        <router-link :to="{ name: 'Easymode', params: { mode: 'easy' } }">
+          <v-btn color="success" class="mb-2">Easy</v-btn>
+        </router-link>
+      </v-col>
+      <v-col cols="12" sm="4" class="text-center">
+        <router-link :to="{ name: 'IntermediateMode', params: { mode: 'intermediate' } }">
+          <v-btn color="warning" class="mb-2">Intermediate</v-btn>
+        </router-link>
+      </v-col>
+      <v-col cols="12" sm="4" class="text-center">
+        <router-link :to="{ name: 'HardMode', params: { mode: 'hard' } }">
+          <v-btn color="error" class="mb-2">Hard</v-btn>
+        </router-link>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -30,38 +38,5 @@ export default {
 </script>
 
 <style>
-
-.home-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-around;
-    width: 300px;
-    margin-top: 20px;
-}
-
-button {
-  width: 140px;
-  height: 60px;
-  background-color: lightblue;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-
-button:hover {
-  background-color: darkblue;
-  color: white;
-}
 
 </style>

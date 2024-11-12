@@ -1,15 +1,16 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <v-col cols="8" sm="6" md="5" lg="6">
+            <v-col cols="12" sm="8" md="6">
                 <v-card elevation="3" class="pa-4">
-                    <v-row justify="center">
+                    <v-row justify="center" no-gutters>
                         <v-col cols="10" sm="6" md="5">
                             <v-text-field
                                 v-model="searchQuery"
                                 label="Search by keyword"
                                 append-icon="mdi-magnify"
                                 clearable
+                                dense
                                 class="mb-4"
                             >
                         </v-text-field>
@@ -18,6 +19,8 @@
                             <v-btn
                                 :color="showSavedOnly ? 'primary' : 'grey'"
                                 @click="toggleShowSavedOnly"
+                                class="mx-1"
+                                dense
                             >
                                 Saved Lessons
                             </v-btn>
@@ -26,7 +29,7 @@
                     <v-slide-group
                         v-model="selectedCard"
                         show-arrows
-                        class="d-flex flex-row justify-center"
+                        class="d-flex mt-4 justify-center"
                         center-active
                         @change="updateFocusCard"
                     >
@@ -37,8 +40,9 @@
                             <v-card
                                 :elevation="index === selectedCard ? 10 : 2"
                                 class="lesson-card mx-2 my-4"
-                                max-width="300"
+                                max-width="280"
                                 height="400px"
+                                style="overflow: hidden"
                                 @mouseover="cardHover = true"
                                 @mouseleave="cardHover = false"
                                 :style="cardHover ? { boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)' } : {}"
@@ -49,12 +53,12 @@
                                         {{ lesson.content }}
                                     </div>
                                 </v-card-text>
-                                <v-card-actions class="d-flex justify-center small-btn-container">
+                                <v-card-actions>
                                     <v-btn
                                         @click="toggleReveal(lesson.id)"
                                         color="primary"
+                                        dense
                                         variant="text"
-                                        class="small-btn"
                                     >
                                         Details
                                     </v-btn>
@@ -73,7 +77,7 @@
                                         class="v-card--reveal pa-4"
                                     >
                                         <v-card-text>
-                                            <p class="text-subtitle-1 font-weight-medium mb-2">Questions to Consider</p>
+                                            <p class="text-subtitle-1 font-weight-medium mb-2">Interview questions</p>
                                             <p
                                                 v-for="(extra, i) in (lesson.extra || [])"
                                                 :key="i"
@@ -126,11 +130,10 @@ export default {
     },
 
     computed: {
-        // filter lessons based on the search query and saved lessons
         filteredLessons() {
             let filtered = this.lessons;
 
-            // keyword search filter
+
             if (this.searchQuery) {
                 const query = this.searchQuery.toLowerCase();
                 filtered = filtered.filter(
@@ -139,8 +142,6 @@ export default {
                         lesson.content.toLowerCase().includes(query)
                 );
             }
-
-            // Apply saved lessons filter
             if (this.showSavedOnly) {
                 filtered = filtered.filter(lesson => this.savedLessons.includes(lesson.id));
             }
@@ -161,11 +162,10 @@ export default {
             this.error = null;
 
             try {
-                // Define the query to fetch lessons with pagination
+
                 const lessonsRef = collection(db, 'lessons');
                 let lessonsQuery = query(lessonsRef, orderBy('title'), limit(10));
 
-                // Start after the last visible document if available
                 if (this.lastVisible) {
                     lessonsQuery = query(lessonsRef, orderBy('title'), startAfter(this.lastVisible), limit(10));
                 }
@@ -173,7 +173,7 @@ export default {
                 const querySnapshot = await getDocs(lessonsQuery);
 
                 if (!querySnapshot.empty) {
-                    // Update lessons and set the last visible document
+
                     const newLessons = querySnapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data(),
@@ -183,7 +183,7 @@ export default {
                     this.lessons = this.lessons.concat(newLessons);
                     this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1]; // Track last document
                 } else {
-                    this.hasMoreLessons = false; // No more lessons to load
+                    this.hasMoreLessons = false;
                 }
             } catch (error) {
                 console.error('Error fetching lessons:', error);
@@ -232,16 +232,6 @@ export default {
     width: auto;
 }
 
-
-.lesson-container {
-    display: flex;
-    justify-content: center;
-    padding: 0 1rem;
-    max-width: 1200px;
-    margin: auto;
-}
-
-
 .lesson-cards {
     display: flex;
     justify-content: center;
@@ -259,14 +249,9 @@ export default {
     background-attachment: fixed;
 }
 
-.loading,
-.error {
-    text-align: center;
-    padding: 2rem;
-}
-
 .lesson-card {
     max-width: 300px;
+    position: relative;
     width: 100%;
     padding: 16px;
     border-radius: 8px;
@@ -278,17 +263,13 @@ export default {
 
 .lesson-card:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transform: translateY(-30px);
-}
-
-.lesson-card.focused {
-    border-color: #42b983;
-    box-shadow: 0 0 10px rgba(66, 185, 131, 0.5);
+    transform: translateY(-20px);
+    background-color: rgba(240, 230, 226, 0.8);
 }
 
 
 .v-card--reveal {
-    background-color: #f9f9f9;
+    background-color: rgba(240, 230, 235, 0.8);
     padding: 16px;
     transform-origin: center;
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -306,7 +287,6 @@ export default {
     transform: rotateY(90deg);
 }
 
-
 .v-container {
     display: flex;
     justify-content: center;
@@ -314,14 +294,17 @@ export default {
     margin: auto;
 }
 .small-btn {
-    padding: 6px 12px;
-    font-size: 0.875rem;
+    min-width: 10px;
+    padding: 0 4px;
+    font-size: 0.75rem;
+    text-transform: none;
+
 }
 
 .small-btn-container {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: -1px;
 }
 
 .navigation-arrow {
@@ -332,7 +315,8 @@ export default {
 .lesson-cards:only-child .navigation-arrow {
     display: none; /* Hide arrows if there's only one card */
 }
-
-
+.justify-space-between {
+    justify-content: space-between;
+}
 
 </style>
