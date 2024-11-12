@@ -264,7 +264,7 @@ export default {
 .lesson-card:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transform: translateY(-20px);
-    background-color: rgba(240, 230, 235, 0.8);
+    background-color: rgba(240, 230, 226, 0.8);
 }
 
 
