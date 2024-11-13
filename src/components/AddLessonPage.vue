@@ -84,31 +84,34 @@ export default {
                 console.error("Error fetching skillsets:", error);
             }
         },
-
         async submitNewLesson() {
+            if (!this.newLesson.content.trim()) {
+            console.error("Lesson content cannot be empty.");
+            return;
+            }
+
             try {
-                const db = getFirestore();
-                const lessonsCollection = collection(db, "lessons");
+            const db = getFirestore();
+            const lessonsCollection = collection(db, "lessons");
 
-                if (this.newLesson.skillset === "Other" && this.customSkillset) {
-                    await this.addCustomSkillset(db, this.customSkillset);
+            if (this.newLesson.skillset === "Other" && this.customSkillset) {
+                await this.addCustomSkillset(db, this.customSkillset);
 
-                    this.newLesson.skillset = this.customSkillset;
-                }
+                this.newLesson.skillset = this.customSkillset;
+            }
 
-                await addDoc(lessonsCollection, {
-                    title: this.newLesson.title,
-                    content: this.newLesson.content,
-                    skillset: this.newLesson.skillset,
-                    extra: this.newLesson.extra ? this.newLesson.extra.split('\n') : []
-                });
+            await addDoc(lessonsCollection, {
+                title: this.newLesson.title,
+                content: this.newLesson.content,
+                skillset: this.newLesson.skillset,
+                extra: this.newLesson.extra ? this.newLesson.extra.split('\n') : []
+            });
 
-                this.resetForm();
+            this.resetForm();
 
-                
-                this.$router.push({ name: 'LessonList' });
+            this.$router.push({ name: 'LessonList' });
             } catch (error) {
-                console.error("Error adding lesson:", error);
+            console.error("Error adding lesson:", error);
             }
         },
 
