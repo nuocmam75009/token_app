@@ -11,6 +11,7 @@ import QuizzPage from '@/components/QuizzPage.vue';
 import UserDashboardPage from '@/components/UserDashboardPage.vue';
 import GamePage from '@/components/GamePage.vue';
 import TestResources from '@/components/TestResources.vue';
+import AddLessonPage from '@/components/AddLessonPage.vue';
 
 const routes = [
   {
@@ -84,6 +85,11 @@ const routes = [
     name: 'Test',
     component: TestResources,
   },
+  {
+    path: '/newlesson',
+    name: 'NewLesson',
+    component: AddLessonPage,
+  }
 
 ];
 
