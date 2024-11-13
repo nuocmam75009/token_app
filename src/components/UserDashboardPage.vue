@@ -164,6 +164,7 @@ export default {
           try {
             const resultsCollectionRef = collection(db, 'quizzResults', user.uid, 'results');
             const resultsQuery = query(resultsCollectionRef, orderBy('date', 'desc'), limit(1));
+            
             const querySnapshot = await getDocs(resultsQuery);
 
             // Check if documents exist and log each one
