@@ -54,7 +54,7 @@
 <script>
 
 import { ref, onMounted, computed } from 'vue';
-import { arrayUnion, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 
@@ -176,10 +176,11 @@ export default {
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         // Reference to the user's document in Firestore
-                        const userResultsDocRef = doc(
+                        const resultsCollectionRef = collection(
                             db,
                             'quizzResults',
-                            user.uid
+                            user.uid,
+                            'results'
                         );
 
                         const data = {
@@ -189,7 +190,8 @@ export default {
                         };
 
                         // Store results in Firestore
-                        await setDoc(userResultsDocRef, data, { merge: true });
+                        await addDoc(resultsCollectionRef, data);
+                        // await setDoc(userResultsDocRef, data, { merge: true });
                         console.log('Results stored in Firestore:', data);
                     } else {
                         // User not logged in
