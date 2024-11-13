@@ -24,6 +24,11 @@
                             >
                                 Saved Lessons
                             </v-btn>
+                            <v-btn
+                            @click="goToAddLessonPage"
+                            color="primary">
+                                Add a Lesson
+                            </v-btn>
                         </v-col>
                     </v-row>
                     <v-slide-group
@@ -110,6 +115,7 @@
 <script>
 import { db } from '../../config/firebase';
 import { collection, getDocs, query, limit, orderBy, startAfter } from 'firebase/firestore';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'ResourcesPage',
@@ -221,6 +227,18 @@ export default {
             this.showSavedOnly = !this.showSavedOnly;
         }
     },
+    setup() {
+    const router = useRouter();
+
+    // Navigate to AddLessonPage
+    const goToAddLessonPage = () => {
+      router.push({ path: '/newlesson' });
+    };
+
+    return {
+      goToAddLessonPage,
+    };
+  },
 };
 </script>
 
