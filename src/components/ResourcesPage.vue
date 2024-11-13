@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <v-col cols="12" sm="8" md="6">
+            <v-col cols="12" sm="10" md="8" lg="6">
                 <v-card elevation="3" class="pa-4">
                     <v-row justify="center" no-gutters>
                         <v-col cols="10" sm="6" md="5">
@@ -309,8 +309,9 @@ export default {
 .v-container {
     display: flex;
     justify-content: center;
-    width: 800px;
+    max-width: 100%;
     margin: auto;
+    max-height: 100%;
 }
 .small-btn {
     min-width: 10px;
@@ -337,5 +338,6 @@ export default {
 .justify-space-between {
     justify-content: space-between;
 }
+
 
 </style>

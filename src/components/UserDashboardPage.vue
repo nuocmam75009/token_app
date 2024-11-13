@@ -114,99 +114,92 @@
       </v-row>
     </v-container>
   </template>
+<script>
+import { doc, getDoc, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { db, auth } from '../../config/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
-  <script>
-  import { doc, getDoc, updateDoc, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-  import { db, auth } from '../../config/firebase';
-  import { onAuthStateChanged } from 'firebase/auth';
-
-  export default {
-    name: 'UserDashboard',
-    data() {
-      return {
-        editDialog: false,
-        detailsDialog: false,
-        results: [],
+export default {
+  name: 'UserDashboard',
+  data() {
+    return {
+      editDialog: false,
+      detailsDialog: false,
+      results: [],
+      firstName: '',
+      lastName: '',
+      emailAddress: '',
+      editedProfile: {
         firstName: '',
         lastName: '',
-        emailAddress: '',
-        editedProfile: {
-          firstName: '',
-          lastName: '',
-          email: '',
-        },
-        latestQuiz: {},
-      };
-    },
-    async created() {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const userDocRef = doc(db, 'users', user.uid);
-          const userSnap = await getDoc(userDocRef);
-          if (userSnap.exists()) {
-            const userData = userSnap.data();
-            this.firstName = userData.firstName;
-            this.lastName = userData.lastName;
-            this.emailAddress = userData.email;
-            this.editedProfile = {
-                firstName: this.firstName,
-                lastName: this.lastName,
-                email: this.emailAddress,
-             };
-            this.results = userData.results || [];
+        email: '',
+      },
+      latestQuiz: {},
+    };
+  },
+  async created() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log("Current user UID:", user.uid);
 
-            // Fetch latest quiz result
+        // Fetching user details
+        const userDocRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          this.firstName = userData.firstName;
+          this.lastName = userData.lastName;
+          this.emailAddress = userData.email;
+          this.editedProfile = {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.emailAddress,
+          };
+          this.results = userData.results || [];
+
+          // Log path and attempt to fetch latest quiz result
+          console.log(`Attempting to fetch quiz results from path: quizzResults/${user.uid}/results`);
+
+          try {
             const resultsCollectionRef = collection(db, 'quizzResults', user.uid, 'results');
             const resultsQuery = query(resultsCollectionRef, orderBy('date', 'desc'), limit(1));
             const querySnapshot = await getDocs(resultsQuery);
 
+            // Check if documents exist and log each one
             if (!querySnapshot.empty) {
               querySnapshot.forEach((doc) => {
+                console.log('Fetched latest quiz result data:', doc.data());
                 this.latestQuiz = doc.data();
-              })
+              });
             } else {
-                this.latestQuiz = {
-                    date: null,
-                    mode: 'N/A',
-                    score: 'N/A',
-                    results: 'N/A',
-                };
-              console.log('No quiz results found');
+              console.warn('No quiz results found for this user.');
+              this.latestQuiz = {
+                date: null,
+                mode: 'N/A',
+                score: 'N/A',
+                results: 'N/A',
+              };
             }
-          } else {
-            console.log('No user data found in Firestore');
+          } catch (error) {
+            console.error('Error fetching quiz results:', error);
           }
         } else {
-          console.log('No user is signed in');
+          console.warn('No user data found in Firestore.');
         }
-      });
+      } else {
+        console.warn('No user is signed in.');
+      }
+    });
+  },
+  methods: {
+    formatDate(date) {
+      return date ? new Date(date.seconds * 1000).toLocaleString() : 'N/A';
     },
-    methods: {
-      async saveProfile() {
-        try {
-          const user = auth.currentUser;
-          if (user) {
-            const userRef = doc(db, 'users', user.uid);
-            await updateDoc(userRef, {
-              firstName: this.editedProfile.firstName,
-              lastName: this.editedProfile.lastName,
-              email: this.editedProfile.email,
-            });
-            this.firstName = this.editedProfile.firstName;
-            this.lastName = this.editedProfile.lastName;
-            this.emailAddress = this.editedProfile.email;
-            this.editDialog = false;
-          }
-        } catch (error) {
-          console.error('Error updating user info:', error);
-        }
-      },
-      formatDate(date) {
-        return date ? new Date(date.seconds * 1000).toLocaleString() : 'N/A';
-      },
-    },
-  };
-  </script>
+  },
+};
+
+</script>
 
 
 
