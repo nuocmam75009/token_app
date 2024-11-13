@@ -54,7 +54,7 @@
 <script>
 
 import { ref, onMounted, computed } from 'vue';
-import { addDoc, arrayUnion, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import {setDoc, arrayUnion, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 
@@ -179,18 +179,17 @@ export default {
                         const resultsCollectionRef = collection(
                             db,
                             'quizzResults',
-                            user.uid,
-                            'results'
                         );
 
                         const data = {
+                            user: user.uid,
                             results: results.value,
                             timestamp: new Date(),
                             mode: props.mode,
                         };
 
                         // Store results in Firestore
-                        await addDoc(resultsCollectionRef, data);
+                        await setDoc(doc(resultsCollectionRef), data);
                         // await setDoc(userResultsDocRef, data, { merge: true });
                         console.log('Results stored in Firestore:', data);
                     } else {
