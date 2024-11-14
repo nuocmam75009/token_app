@@ -3,7 +3,7 @@
         <v-row justify="center">
             <v-col cols="12" sm="10" lg="9">
                 <v-card elevation="3" class="pa-4">
-                    <v-row no-gutters align="center">
+                    <v-row no-gutters align-center>
                         <v-col md="4">
                             <v-text-field
                                 v-model="searchQuery"
