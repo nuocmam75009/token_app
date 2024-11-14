@@ -1,10 +1,10 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-row justify="center">
-            <v-col cols="12" sm="10" md="8" lg="6">
+            <v-col cols="12" sm="10" lg="9">
                 <v-card elevation="3" class="pa-4">
-                    <v-row justify="center" no-gutters>
-                        <v-col cols="10" sm="6" md="5">
+                    <v-row no-gutters align-center>
+                        <v-col md="4">
                             <v-text-field
                                 v-model="searchQuery"
                                 label="Search by keyword"
@@ -15,11 +15,11 @@
                             >
                         </v-text-field>
                         </v-col>
-                        <v-col cols="2" class="d-flex justify-center">
+                        <v-col md="2" class="d-flex">
                             <v-btn
                                 :color="showSavedOnly ? 'primary' : 'grey'"
                                 @click="toggleShowSavedOnly"
-                                class="mx-1"
+                                class="mx-2"
                                 dense
                             >
                                 Saved Lessons
@@ -31,6 +31,7 @@
                             </v-btn>
                         </v-col>
                     </v-row>
+
                     <v-slide-group
                         v-model="selectedCard"
                         show-arrows
@@ -249,6 +250,7 @@ export default {
     display: flex;
     justify-content: center;
     width: auto;
+    max-width: 100%;
 }
 
 .lesson-cards {
