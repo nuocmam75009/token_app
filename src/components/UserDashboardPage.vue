@@ -115,7 +115,7 @@
     </v-container>
   </template>
 <script>
-import { doc, getDoc, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, where, orderBy, doc, getDoc, getDocs, query, limit } from 'firebase/firestore';
 import { db, auth } from '../../config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -162,10 +162,9 @@ export default {
           console.log(`Attempting to fetch quiz results from path: quizzResults/${user.uid}/results`);
 
           try {
-            const resultsCollectionRef = collection(db, 'quizzResults', user.uid, 'results');
-            const resultsQuery = query(resultsCollectionRef, orderBy('date', 'desc'), limit(1));
-            
-            const querySnapshot = await getDocs(resultsQuery);
+            const resultsCollectionRef = collection(db, "quizzResults");
+            const resultsQuery = query(resultsCollectionRef, where("user", "==", user.uid), orderBy('timestamp', 'desc'), limit(1));
+            const querySnapshot = await getDocs(resultsQuery)
 
             // Check if documents exist and log each one
             if (!querySnapshot.empty) {
